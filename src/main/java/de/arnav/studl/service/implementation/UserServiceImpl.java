@@ -4,16 +4,15 @@ import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.Role;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserService;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
 
-    @Override
-    public void verifyUser(User user) {
-
-    }
-
+    @Transactional
     @Override
     public void createUser(User user) {
 
@@ -40,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findUserByUsername(String username) {
+    public List<User> findUsersByUsername(String username) {
         return null;
     }
 

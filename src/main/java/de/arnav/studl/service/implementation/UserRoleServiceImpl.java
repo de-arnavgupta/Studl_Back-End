@@ -3,24 +3,16 @@ package de.arnav.studl.service.implementation;
 import de.arnav.studl.model.Role;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
-import de.arnav.studl.service.RoleService;
+import de.arnav.studl.service.UserRoleService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class RoleServiceImpl implements RoleService {
+@Service
+public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public Integer countUsersByRole(RoleType roleType) {
         return 0;
-    }
-
-    @Override
-    public Long findRoleIdByRoleType(RoleType roleType) {
-        return 0L;
-    }
-
-    @Override
-    public Role findRoleByRoleType(RoleType roleType) {
-        return null;
     }
 
     @Override
@@ -54,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Boolean userHasRole(Long userId, RoleType roleType) {
+    public Boolean hasRole(Long userId, RoleType roleType) {
         return null;
     }
 

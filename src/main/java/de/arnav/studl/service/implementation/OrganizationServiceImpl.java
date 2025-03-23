@@ -2,9 +2,11 @@ package de.arnav.studl.service.implementation;
 
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.service.OrganizationService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
@@ -37,4 +39,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         return 0;
     }
 
+    @Override
+    public List<Organization> findOrganizationsByName(String name) {
+        return List.of();
+    }
 }

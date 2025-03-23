@@ -8,14 +8,13 @@ import java.util.List;
 
 public interface UserService {
 
-    void verifyUser(User user);
     void createUser(User user);
     void updateUser(User user, Long userId);
     void deleteUser(Long userId);
     void lockUserDueToFailedAttempts(Long userId);
     User findUserById(Long userId);
-    User findUserByUsername(String username);
     User findUserByEmail(String email);
+    List<User> findUsersByUsername(String username);
     List<User> findAllUsers();
     Role findRoleByUsername(String username);
     Organization findOrganizationByUsername(String username);
