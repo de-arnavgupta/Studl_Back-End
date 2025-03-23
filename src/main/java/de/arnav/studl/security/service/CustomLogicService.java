@@ -1,30 +1,36 @@
 package de.arnav.studl.security.service;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class CustomLogicService {
 
-    private final User user;
+    private final ExcelEmailChecker excelEmailChecker;
 
-    public CustomLogicService(User user){
-        this.user = user;
+    public CustomLogicService(ExcelEmailChecker excelEmailChecker) {
+        this.excelEmailChecker = excelEmailChecker;
     }
 
-    @Bean
-    public Role assignRole(String email){
+    public Set<String> assignRoles(String email) {
+        Set<String> roles = new HashSet<>();
 
-        String domain = email.split("@")[1];
+        try {
+            String domain = email.split("@")[1];
 
-
-        if(domain.equals("scaler.com")){
-
+            if (domain.equals("scaler.com")) {
+                if (excelEmailChecker.isEmailInExcel(email)) {
+                    roles.add("ROLE_ADMIN"); // Assign admin role if found in the Excel sheet
+                }
+            }
+            else if (domain.equals("sst.scaler.com")) {
+                roles.add("ROLE_STUDENT"); // Assign student role
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error while assigning roles", e);
         }
 
-        else if(domain.equals("sst.scaler.com")){
-            user.setRole("ROLE_STUDENT");
-        }
-
+        return roles;
     }
 }
