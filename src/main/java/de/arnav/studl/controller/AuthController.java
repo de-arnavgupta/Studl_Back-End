@@ -36,10 +36,9 @@ public class AuthController {
        return authFacade.logoutUser(request);
     }
 
-    @PostMapping
-    public ResponseEntity<String> register(@RequestBody LoginRequest loginRequest){
-        return authFacade.registerUser()
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user){
+        return authFacade.registerUser(user);
     }
-
 
 }

@@ -74,16 +74,18 @@ public class AuthService {
     }
 
     //method to logout
-    public ResponseEntity<String> logout(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+    public void logout(HttpServletRequest request) {
+        try{
+            String authHeader = request.getHeader("Authorization");
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            addtoken(token);
-            return ResponseEntity.ok("Logged out successfully.");
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                addtoken(token);
+            }
+        } catch (Exception e){
+            throw new RuntimeException("Token not found");
         }
 
-        return ResponseEntity.badRequest().body(null);
     }
 
 }
