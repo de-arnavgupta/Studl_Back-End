@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomLogicService {
 
-    User user;
+    private final User user;
 
     public CustomLogicService(User user){
         this.user = user;
@@ -25,8 +25,6 @@ public class CustomLogicService {
         else if(domain.equals("sst.scaler.com")){
             user.setRole("ROLE_STUDENT");
         }
-
-
 
     }
 }

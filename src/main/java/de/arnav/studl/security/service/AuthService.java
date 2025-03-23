@@ -1,5 +1,6 @@
 package de.arnav.studl.security.service;
 
+import com.nimbusds.openid.connect.sdk.assurance.evidences.Organization;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -23,13 +24,15 @@ public class AuthService {
     private final UserDetailsService userDetailsService;
     private final Email email;
     private final OrganizationJpaRepository organizationJpaRepository;
+    private final TokenBlackListRepository tokenBlackListRepository;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService,Email email,OrganizationJpaRepository organizationJpaRepository) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService,Email email,OrganizationJpaRepository organizationJpaRepository,TokenBlacklistRepository tokenBlacklistRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.email = email;
         this.organizationJpaRepository = organizationJpaRepository;
+        this.tokenBlackListRepository=tokenBlacklistRepository;
     }
 
     //for login
@@ -64,7 +67,7 @@ public class AuthService {
     }
 
 
-    public void addtoken(String token) {
+    public void addToken(String token) {
         LocalDateTime expirationTime = jwtService.getExpirationTime(token); // Extract expiry from JWT
         tokenBlacklistRepository.save(new BlacklistedToken(token, expirationTime));
     }
@@ -80,10 +83,10 @@ public class AuthService {
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
-                addtoken(token);
+                addToken(token);
             }
         } catch (Exception e){
-            throw new RuntimeException("Token not found");
+            throw new RuntimeException("Logout failed");
         }
 
     }

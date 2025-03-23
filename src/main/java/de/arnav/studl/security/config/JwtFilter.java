@@ -1,5 +1,6 @@
 package de.arnav.studl.security.config;
 
+import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.security.service.MyUserDetailService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -23,10 +24,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final MyUserDetailService myUserDetailService;
+    private final AuthService authService;
 
-    public JwtFilter(JwtService jwtService,MyUserDetailService myUserDetailService){
+    public JwtFilter(JwtService jwtService,MyUserDetailService myUserDetailService,AuthService authService) {
         this.jwtService=jwtService;
         this.myUserDetailService=myUserDetailService;
+        this.authService=authService;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             // Check if token is blacklisted (User has logged out)
-            if (tokenBlacklistService.isTokenBlacklisted(token)) {
+            if (authService.isTokenBlacklisted(token)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
                 return;
             }
