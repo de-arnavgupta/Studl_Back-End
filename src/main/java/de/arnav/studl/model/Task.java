@@ -25,7 +25,6 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
 
-    // Assignee and reporter are both Users
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
@@ -40,7 +39,6 @@ public class Task {
     private LocalDateTime startAt;
     private LocalDateTime completedAt;
 
-    // Many-to-many relationship with labels
     @ManyToMany
     @JoinTable(
             name = "task_labels",
@@ -49,7 +47,6 @@ public class Task {
     )
     private Set<Label> labels = new HashSet<>();
 
-    // Constructors, getters and setters
     public Task() {}
 
     public Long getTaskId() { return taskId; }
