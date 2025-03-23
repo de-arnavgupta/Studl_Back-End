@@ -5,7 +5,9 @@ import de.arnav.studl.dto.organization.OrganizationCreateDto;
 import de.arnav.studl.dto.organization.OrganizationResponseDto;
 import de.arnav.studl.dto.organization.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
+import org.springframework.stereotype.Component;
 
+@Component
 public class OrganizationAdapter implements DtoAdapter<Organization, OrganizationResponseDto, OrganizationCreateDto, OrganizationUpdateDto> {
 
     @Override
