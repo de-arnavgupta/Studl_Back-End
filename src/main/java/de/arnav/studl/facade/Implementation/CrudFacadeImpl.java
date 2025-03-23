@@ -2,7 +2,6 @@ package de.arnav.studl.facade.Implementation;
 
 import de.arnav.studl.facade.CrudFacade;
 import de.arnav.studl.model.Organization;
-import de.arnav.studl.model.Role;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserRoleService;
@@ -66,12 +65,12 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public Role findRoleByUserId(Long userId) {
+    public RoleType findRoleByUserId(Long userId) {
         return userRoleService.findRoleByUserId(userId);
     }
 
     @Override
-    public Role findRoleByUsername(String username) {
+    public RoleType findRoleByUsername(String username) {
         return userService.findRoleByUsername(username);
     }
 

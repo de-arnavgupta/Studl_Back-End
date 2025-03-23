@@ -1,6 +1,5 @@
 package de.arnav.studl.service.implementation;
 
-import de.arnav.studl.model.Role;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserRoleService;
@@ -16,22 +15,22 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public Role getTopRoleInHierarchy() {
+    public RoleType getTopRoleInHierarchy() {
         return null;
     }
 
     @Override
-    public Role getBottomRoleInHierarchy() {
+    public RoleType getBottomRoleInHierarchy() {
         return null;
     }
 
     @Override
-    public Role findRoleByUserId(Long userId) {
+    public RoleType findRoleByUserId(Long userId) {
         return null;
     }
 
     @Override
-    public Role findNextHigherRole(RoleType roleType) {
+    public RoleType findNextHigherRole(RoleType roleType) {
         return null;
     }
 

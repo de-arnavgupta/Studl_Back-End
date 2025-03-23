@@ -1,7 +1,7 @@
 package de.arnav.studl.service;
 
 import de.arnav.studl.model.Organization;
-import de.arnav.studl.model.Role;
+import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface UserService {
     User findUserByEmail(String email);
     List<User> findUsersByUsername(String username);
     List<User> findAllUsers();
-    Role findRoleByUsername(String username);
+    RoleType findRoleByUsername(String username);
     Organization findOrganizationByUsername(String username);
     Integer getFailedLoginAttemptCount(Long userId);
     Boolean userHasRole(Long userId, String roleName);
