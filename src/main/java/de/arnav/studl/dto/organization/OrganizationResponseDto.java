@@ -2,12 +2,19 @@ package de.arnav.studl.dto.organization;
 
 import java.util.List;
 
-public class OrganizationUpdateDto {
+public class OrganizationResponseDto {
+    private Long organizationId;
     private String name;
     private String domain;
     private List<String> codomains;
     private List<String> topLevelDomains;
 
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
     public String getName() {
         return name;
     }
