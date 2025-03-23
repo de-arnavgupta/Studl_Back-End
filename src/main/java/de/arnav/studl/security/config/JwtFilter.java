@@ -44,6 +44,13 @@ public class JwtFilter extends OncePerRequestFilter {
                 email=jwtService.extractEmail(token);
             }
 
+            // Check if token is blacklisted (User has logged out)
+            if (tokenBlacklistService.isTokenBlacklisted(token)) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
+                return;
+            }
+
+
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
 

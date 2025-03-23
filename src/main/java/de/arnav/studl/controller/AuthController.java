@@ -1,6 +1,7 @@
 package de.arnav.studl.controller;
 
 import de.arnav.studl.dto.LoginRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,15 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/register")
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request){
+       return authFacade.logoutUser(request);
+    }
+
+    @PostMapping
+    public ResponseEntity<String> register(@RequestBody LoginRequest loginRequest){
+        return authFacade.registerUser()
+    }
 
 
 }

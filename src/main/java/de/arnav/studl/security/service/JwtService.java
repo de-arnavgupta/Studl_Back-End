@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -81,5 +83,11 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+    public LocalDateTime getExpirationTime(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.getExpiration().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+
 
 }
