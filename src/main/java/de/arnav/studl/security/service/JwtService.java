@@ -54,6 +54,7 @@ public class JwtService {
         return claimsResolver.apply(claims); //we apply claim resolver function to extract one specific claim
     }
 
+    //generic method to extract claims from the database
     private Claims extractAllClaims(String token) {
         return Jwts.parser().verifyWith(getKey())
                 .build()
@@ -63,8 +64,13 @@ public class JwtService {
 
 
     public boolean validateToken(String token, UserDetails userDetails) {
-        final String email=extractEmail(token);
-        return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        try{
+            final String email=extractEmail(token);
+            return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
+        } catch(Exception e){
+            return false;
+        }
+
     }
 
     private boolean isTokenExpired(String token) {
@@ -75,7 +81,5 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
-
-
 
 }
