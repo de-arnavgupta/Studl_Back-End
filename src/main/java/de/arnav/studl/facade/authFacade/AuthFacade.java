@@ -3,9 +3,12 @@ package de.arnav.studl.facade.authFacade;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 
+
 public interface AuthFacade {
-    // methods: userRegister, userLogin, userLogout and organisationRegister
+
+    // methods order: organisation, user, role, email
     void organizationRegister (Organization organization);
+
     void userRegister (User user);
     void userLogin (User user);
     // void userLogout (User user);

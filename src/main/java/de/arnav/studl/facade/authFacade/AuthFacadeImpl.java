@@ -17,17 +17,17 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public void organizationRegister(Organization organization) {
-        organizationService.createOrganization();
+        organizationService.createOrganization(organization);
     }
 
     @Override
     public void userRegister(User user) {
-        userService.createUser();
+        userService.createUser(user);
     }
 
     @Override
     public void userLogin(User user) {
-        userService.verifyUser();
+        userService.verifyUser(user);
     }
 
 //    @Override
