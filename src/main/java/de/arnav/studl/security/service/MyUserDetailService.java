@@ -15,11 +15,11 @@ public class MyUserDetailService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user=userJpaRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user=userJpaRepository.findByEmail(email);
 
         if(user==null){
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
 
         return new UserPrincipal(user);

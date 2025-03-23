@@ -45,7 +45,7 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = myUserDetailService.loadUserByUsername(username);
+                UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
 
                 if(!jwtService.validateToken(token,userDetails)){
                     throw new JwtAuthenticationException("Invalid or expired JWT token");
