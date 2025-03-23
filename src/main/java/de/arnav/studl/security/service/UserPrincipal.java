@@ -18,7 +18,7 @@ public class UserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // Convert the user's role into a GrantedAuthority
-        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().toUpperCase()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRoleType().toUpperCase()));
     }
 
     @Override
