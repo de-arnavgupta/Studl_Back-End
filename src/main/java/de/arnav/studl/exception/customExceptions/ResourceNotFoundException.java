@@ -1,4 +1,4 @@
-package de.arnav.studl.exception;
+package de.arnav.studl.exception.customExceptions;
 
 
 public class ResourceNotFoundException extends RuntimeException {

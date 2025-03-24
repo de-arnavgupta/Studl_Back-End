@@ -3,7 +3,7 @@ package de.arnav.studl.service.implementation;
 import de.arnav.studl.adapter.userRole.UserRoleAdapter;
 import de.arnav.studl.dto.userRole.UserRoleCreateDto;
 import de.arnav.studl.dto.userRole.UserRoleResponseDto;
-import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.User;
 import de.arnav.studl.model.UserRole;
 import de.arnav.studl.repository.UserRepository;

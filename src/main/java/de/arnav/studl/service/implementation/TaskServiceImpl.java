@@ -4,7 +4,7 @@ import de.arnav.studl.adapter.task.TaskAdapter;
 import de.arnav.studl.dto.task.TaskCreateDto;
 import de.arnav.studl.dto.task.TaskResponseDto;
 import de.arnav.studl.dto.task.TaskUpdateDto;
-import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.Label;
 import de.arnav.studl.model.Task;
 import de.arnav.studl.model.User;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 

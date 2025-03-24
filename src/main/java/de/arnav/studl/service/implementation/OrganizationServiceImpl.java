@@ -4,7 +4,7 @@ import de.arnav.studl.adapter.organization.OrganizationAdapter;
 import de.arnav.studl.dto.organization.OrganizationCreateDto;
 import de.arnav.studl.dto.organization.OrganizationResponseDto;
 import de.arnav.studl.dto.organization.OrganizationUpdateDto;
-import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.repository.OrganizationRepository;
 import de.arnav.studl.service.template.OrganizationService;

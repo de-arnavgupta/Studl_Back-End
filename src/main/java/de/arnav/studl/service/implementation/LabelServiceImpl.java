@@ -4,7 +4,7 @@ import de.arnav.studl.adapter.label.LabelAdapter;
 import de.arnav.studl.dto.label.LabelCreateDto;
 import de.arnav.studl.dto.label.LabelResponseDto;
 import de.arnav.studl.dto.label.LabelUpdateDto;
-import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.Label;
 import de.arnav.studl.repository.LabelRepository;
 import de.arnav.studl.service.template.LabelService;

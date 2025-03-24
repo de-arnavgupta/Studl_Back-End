@@ -1,5 +1,6 @@
 package de.arnav.studl.exception;
 
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

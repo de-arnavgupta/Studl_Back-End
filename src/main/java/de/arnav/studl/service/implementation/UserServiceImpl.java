@@ -4,7 +4,7 @@ import de.arnav.studl.adapter.user.UserAdapter;
 import de.arnav.studl.dto.user.UserCreateDto;
 import de.arnav.studl.dto.user.UserResponseDto;
 import de.arnav.studl.dto.user.UserUpdateDto;
-import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import de.arnav.studl.model.UserRole;
