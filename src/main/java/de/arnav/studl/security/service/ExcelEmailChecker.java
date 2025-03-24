@@ -11,10 +11,7 @@ import java.io.IOException;
 @Service
 public class ExcelEmailChecker {
 
-    private static final String EXCEL_FILE_PATH = "C:/path_to_your_file/admins.xlsx";  // Update this path
-
-
-    public boolean isEmailInExcel(String emailToSearch) {
+    public boolean isEmailInExcel(String emailToSearch,String EXCEL_FILE_PATH) {
         try (FileInputStream fis = new FileInputStream(new File(EXCEL_FILE_PATH));
              Workbook workbook = new XSSFWorkbook(fis)) {
 

@@ -11,6 +11,7 @@ public class CustomLogicService {
 
     private final ExcelEmailChecker excelEmailChecker;
     private final RoleType roleType;
+    private static final String EXCEL_FILE_PATH = "C:/path_to_your_file/admins.xlsx";
 
     public CustomLogicService(ExcelEmailChecker excelEmailChecker,RoleType roleType) {
         this.excelEmailChecker = excelEmailChecker;
@@ -24,7 +25,7 @@ public class CustomLogicService {
             String domain = email.split("@")[1];
 
             if (domain.equals("scaler.com")) {
-                if (excelEmailChecker.isEmailInExcel(email)) {
+                if (excelEmailChecker.isEmailInExcel(email, EXCEL_FILE_PATH)) {
                     roles.add(RoleType.ROLE_ADMIN); // Assign admin role if found in the Excel sheet
                 }
             }
