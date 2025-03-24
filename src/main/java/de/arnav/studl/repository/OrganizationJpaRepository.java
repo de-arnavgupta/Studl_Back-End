@@ -11,4 +11,6 @@ public interface OrganizationJpaRepository extends JpaRepository<Organization, L
     Integer countUsersByOrganization(Long organizationId);
 
     List<Organization> findByName(String name);
+
+    boolean existsByDomain(String domain);
 }

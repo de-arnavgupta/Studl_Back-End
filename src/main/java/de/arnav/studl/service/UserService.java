@@ -15,7 +15,7 @@ public interface UserService {
     UserResponseDto createUser(UserCreateDto userCreateDto);
     UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId);
     UserResponseDto removeRoleFromUser(Long userRoleId, RoleType roleType);
-    UserResponseDto removeAllRolesFromUser(Long userRoleId);
+    UserResponseDto removeAllRolesFromUser(Long userId);
     UserResponseDto findUserById(Long userId);
     UserResponseDto findUserByEmail(String email);
     List<UserResponseDto> findUsersByUsername(String username);

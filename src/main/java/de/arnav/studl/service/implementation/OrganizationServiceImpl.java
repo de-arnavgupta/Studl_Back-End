@@ -27,6 +27,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional
     @Override
     public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
+        if (organizationJpaRepository.existsByDomain(organizationCreateDto.getDomain())) {
+            throw new DuplicateOrganizationException();
+        }
         Organization organization = organizationAdapter.fromCreateDto();
         Organization savedOrganization = organizationJpaRepository.save(organization);
         return organizationAdapter.toResponseDto(savedOrganization);
@@ -36,7 +39,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
 
-        Organization organization = organizationJpaRepository.findById(organizationId).orElseThrow();
+        if (organizationId == null) {
+            throw new IllegalArgumentException();
+        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException());
 
         if(organizationUpdateDto.getName() != null) {
             organization.setName(organizationUpdateDto.getName());
@@ -57,17 +64,33 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional
     @Override
     public void deleteOrganization(Long organizationId) {
+        if (organizationId == null) {
+            throw new IllegalArgumentException();
+        }
+        if (!organizationJpaRepository.existsById(organizationId)) {
+            throw new OrganizationNotFoundException();
+        }
         organizationJpaRepository.deleteById(organizationId);
     }
 
     @Override
     public Integer countUsersByOrganization(Long organizationId) {
+        if (organizationId == null) {
+            throw new IllegalArgumentException();
+        }
+        if (!organizationJpaRepository.existsById(organizationId)) {
+            throw new OrganizationNotFoundException();
+        }
         return organizationJpaRepository.countUsersByOrganization(organizationId);
     }
 
     @Override
     public OrganizationResponseDto findOrganizationById(Long organizationId) {
-        Organization organization = organizationJpaRepository.findById(organizationId).orElseThrow();
+        if (organizationId == null) {
+            throw new IllegalArgumentException();
+        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException());
         return organizationAdapter.toResponseDto(organization);
     }
 
@@ -83,6 +106,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public List<OrganizationResponseDto> findOrganizationsByName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException();
+        }
         List<Organization> organizations = organizationJpaRepository.findByName(name);
         List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();
         for(Organization organization : organizations) {
