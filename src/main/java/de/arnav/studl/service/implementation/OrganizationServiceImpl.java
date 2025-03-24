@@ -61,12 +61,6 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationResponseDto getOrganization(Long organizationId) {
-        Organization organization = organizationJpaRepository.findById(organizationId).orElseThrow();
-        return organizationAdapter.toResponseDto(organization);
-    }
-
-    @Override
     public Integer countUsersByOrganization(Long organizationId) {
         return organizationJpaRepository.countUsersByOrganization(organizationId);
     }

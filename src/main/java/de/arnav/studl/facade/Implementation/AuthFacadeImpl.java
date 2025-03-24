@@ -2,8 +2,9 @@ package de.arnav.studl.facade.Implementation;
 
 import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.userDto.UserCreateDto;
+import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.facade.AuthFacade;
-import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
@@ -33,10 +34,11 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public String userRegister(User user) {
-        authService.verifyOrganization(user.getEmail());
-        userService.createUser(user);
-        return jwtService.generateToken(user.getEmail());
+    public UserResponseDto userRegister(UserCreateDto userCreateDto) {
+        authService.verifyOrganization(userCreateDto.getEmail());
+        UserResponseDto userResponseDto = userService.createUser(userCreateDto);
+        jwtService.generateToken(userCreateDto.getEmail());
+        return userResponseDto;
     }
 
     @Override
@@ -49,10 +51,3 @@ public class AuthFacadeImpl implements AuthFacade {
         authService.logout(request);
     }
 }
-
-/*
-- Logout needs refresh tokens or token blacklisting.
-
-- Using the following models:
-User, Organization
- */
