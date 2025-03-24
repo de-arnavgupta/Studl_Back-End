@@ -1,8 +1,7 @@
 package de.arnav.studl.service;
 
-import de.arnav.studl.dto.OrganizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
-import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 

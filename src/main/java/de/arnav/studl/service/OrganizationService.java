@@ -1,9 +1,8 @@
 package de.arnav.studl.service;
 
-import de.arnav.studl.dto.OrganizationDto.OrganizationCreateDto;
-import de.arnav.studl.dto.OrganizationDto.OrganizationResponseDto;
-import de.arnav.studl.dto.OrganizationDto.OrganizationUpdateDto;
-import de.arnav.studl.model.Organization;
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 
 import java.util.List;
 
