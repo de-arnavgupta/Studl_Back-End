@@ -2,6 +2,8 @@ package de.arnav.studl.model;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "Users")
@@ -11,8 +13,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @ManyToOne
-    private Role roleId;
+    @ElementCollection
+    @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<RoleType> roleType = new HashSet<>();
 
     private String userName;
 
@@ -31,15 +35,13 @@ public class User {
     //Default
     public User() {}
 
-    public User(Long userId, Role roleId, String userName, String userEmail, Long organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
+    public User(Long userId, RoleType roleType, String userName, String userEmail, Long organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
 
         this.userId = userId;
-        this.roleId = roleId;
+        this.roleType = roleType;
         this.userName = userName;
         this.userEmail = userEmail;
         this.organisationRollNo = organisationRollNo;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
         this.provider = provider;
         this.providerId = providerId;
     }
@@ -52,11 +54,11 @@ public class User {
         this.userId = userId;
     }
 
-    public Role getRoleId() {
-        return roleId;
+    public Set<RoleType> getRoleType() {
+        return roleType;
     }
-    public void setUserId(Role roleId) {
-        this.roleId = roleId;
+    public void setRoleType(Set<RoleType> roleType) {
+        this.roleType = roleType;
     }
 
     public String getUserName() {
@@ -83,15 +85,9 @@ public class User {
     public Timestamp getCreatedAt() {
         return createdAt;
     }
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public Timestamp getUpdatedAt() {
         return updatedAt;
-    }
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getProvider() {
@@ -106,5 +102,17 @@ public class User {
     }
     public void setProviderId(String providerId) {
         this.providerId = providerId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }
