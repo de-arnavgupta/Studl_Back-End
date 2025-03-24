@@ -1,17 +1,20 @@
 package de.arnav.studl.service;
 
+import de.arnav.studl.dto.OrganizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.OrganizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.OrganizationDto.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
 
 import java.util.List;
 
 public interface OrganizationService {
 
-    void createOrganization(Organization organization);
-    void updateOrganization(Organization organization, Long organizationId);
+    OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto);
+    OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId);
     void deleteOrganization(Long organizationId);
     Integer countUsersByOrganization(Long userId);
-    Organization findOrganizationById(Long organizationId);
-    List<Organization> findAllOrganizations();
-    List<Organization> findOrganizationsByName(String name);
+    OrganizationResponseDto findOrganizationById(Long organizationId);
+    List<OrganizationResponseDto> findAllOrganizations();
+    List<OrganizationResponseDto> findOrganizationsByName(String name);
 
 }

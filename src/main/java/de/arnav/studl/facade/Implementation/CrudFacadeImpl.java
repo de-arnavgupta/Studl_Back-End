@@ -5,8 +5,6 @@ import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserRoleService;
-import de.arnav.studl.service.implementation.OrganizationServiceImpl;
-import de.arnav.studl.service.implementation.UserServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

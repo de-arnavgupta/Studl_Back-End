@@ -5,8 +5,6 @@ import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
-import de.arnav.studl.service.implementation.OrganizationServiceImpl;
-import de.arnav.studl.service.implementation.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
