@@ -6,6 +6,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -21,13 +22,16 @@ public class JwtService {
     private final String secretKey;
 
 
+
     public JwtService(@Value("${jwt.secret}") String secretKey) {
         this.secretKey = secretKey;
+
     }
 
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
+
         return Jwts.builder()
                 .claims()
                 .add(claims)
