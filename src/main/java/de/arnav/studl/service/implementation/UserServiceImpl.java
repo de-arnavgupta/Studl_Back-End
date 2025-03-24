@@ -4,6 +4,7 @@ import de.arnav.studl.adapter.user.UserAdapter;
 import de.arnav.studl.dto.user.UserCreateDto;
 import de.arnav.studl.dto.user.UserResponseDto;
 import de.arnav.studl.dto.user.UserUpdateDto;
+import de.arnav.studl.exception.customExceptions.DuplicateEmailException;
 import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
@@ -35,13 +36,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto createUser(UserCreateDto dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEmailException("A user with email " + dto.getEmail() + " already exists.");
+        }
+
         User user = userAdapter.fromCreateDto(dto);
 
-         Organization org = organizationRepository.findById(dto.getOrganizationId())
-             .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
-         user.setOrganization(org);
+        Organization org = organizationRepository.findById(dto.getOrganizationId())
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
+        user.setOrganization(org);
 
-        if(dto.getRoles() != null && !dto.getRoles().isEmpty()) {
+        if (dto.getRoles() != null && !dto.getRoles().isEmpty()) {
             List<UserRole> roles = dto.getRoles().stream().map(roleStr -> {
                 UserRole userRole = new UserRole();
                 userRole.setRole(Role.valueOf(roleStr.toUpperCase()));
@@ -54,7 +59,6 @@ public class UserServiceImpl implements UserService {
         User savedUser = userRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
     }
-
 
     @Override
     public UserResponseDto getUserById(Long id) {
@@ -81,15 +85,25 @@ public class UserServiceImpl implements UserService {
     public UserResponseDto updateUser(Long id, UserUpdateDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
-        user = userAdapter.updateEntityFromUpdateDto(dto, user);
-        if (dto.getOrganizationId() != null) {
-            Organization organization = organizationRepository.findById(dto.getOrganizationId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
-            user.setOrganization(organization);
+
+        if (dto.getEmail() != null && !dto.getEmail().equalsIgnoreCase(user.getEmail())) {
+            if (userRepository.existsByEmail(dto.getEmail())) {
+                throw new DuplicateEmailException("A user with email " + dto.getEmail() + " already exists.");
+            }
         }
+
+        user = userAdapter.updateEntityFromUpdateDto(dto, user);
+
+        if (dto.getOrganizationId() != null) {
+            Organization org = organizationRepository.findById(dto.getOrganizationId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
+            user.setOrganization(org);
+        }
+
         User updatedUser = userRepository.save(user);
         return userAdapter.toResponseDto(updatedUser);
     }
+
 
     @Override
     public void deleteUser(Long id) {

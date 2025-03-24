@@ -1,5 +1,6 @@
 package de.arnav.studl.exception;
 
+import de.arnav.studl.exception.customExceptions.DuplicateEmailException;
 import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
 import de.arnav.studl.exception.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,18 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DuplicateEmailException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateEmail(DuplicateEmailException ex, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(Exception.class)
