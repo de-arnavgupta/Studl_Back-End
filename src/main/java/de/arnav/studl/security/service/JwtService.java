@@ -15,30 +15,35 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
     private final String secretKey;
+    private final UserJpaRepository userJpaRepository;
 
 
-
-    public JwtService(@Value("${jwt.secret}") String secretKey) {
+    public JwtService(@Value("${jwt.secret}") String secretKey,UserJpaRepository userJpaRespository) {
         this.secretKey = secretKey;
+        this.userJpaRepository=userJpaRespository;
 
     }
 
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
+        User user=userJpaRepository.findUserByEmail(email);
+        Set<RoleType> roles=user.getRoles();
+
+        List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
 
         return Jwts.builder()
-                .claims()
-                .add(claims)
                 .subject(email)
+                .claim("roles",roles)
                 .issuedAt(new Date(System.currentTimeMillis()))//set issue time
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
-                .and()
                 .signWith(getKey())
                 .compact();
 
