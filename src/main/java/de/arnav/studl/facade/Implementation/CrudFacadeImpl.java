@@ -4,7 +4,6 @@ import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.facade.CrudFacade;
-import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserRoleService;
@@ -12,6 +11,7 @@ import de.arnav.studl.service.implementation.OrganizationServiceImpl;
 import de.arnav.studl.service.implementation.UserServiceImpl;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Component
@@ -25,11 +25,6 @@ public class CrudFacadeImpl implements CrudFacade {
         this.userService = userService;
         this.organizationService = organizationService;
         this.userRoleService = userRoleService;
-    }
-
-    @Override
-    public void createUser(User user) {
-        userService.createUser(user);
     }
 
     @Override
@@ -68,13 +63,13 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public RoleType findRoleByUserId(Long userId) {
-        return userRoleService.findRoleByUserId(userId);
+    public HashSet<RoleType> findRolesByUserId(Long userId) {
+        return userRoleService.findRolesByUserId(userId);
     }
 
     @Override
-    public RoleType findRoleByUsername(String username) {
-        return userService.findRoleByUsername(username);
+    public HashSet<RoleType> findRolesByUsername(String username) {
+        return userService.findRolesByUsername(username);
     }
 
     @Override
@@ -83,13 +78,13 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
-        organizationService.createOrganization(organizationCreateDto);
+    public OrganizationResponseDto registerOrganization(OrganizationCreateDto organizationCreateDto) {
+        return organizationService.createOrganization(organizationCreateDto);
     }
 
     @Override
     public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
-        organizationService.updateOrganization(organizationUpdateDto, organizationId);
+        return organizationService.updateOrganization(organizationUpdateDto, organizationId);
     }
 
     @Override
