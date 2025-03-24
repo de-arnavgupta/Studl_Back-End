@@ -1,7 +1,7 @@
 package de.arnav.studl.security.service;
 
 import de.arnav.studl.exception.RoleAssignmentException;
-import de.arnav.studl.security.model.Role;
+import de.arnav.studl.model.RoleType;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,12 +10,11 @@ import java.util.Set;
 public class CustomLogicService {
 
     private final ExcelEmailChecker excelEmailChecker;
-    private final RoleType roleType;
+
     private static final String EXCEL_FILE_PATH = "C:/path_to_your_file/admins.xlsx";
 
-    public CustomLogicService(ExcelEmailChecker excelEmailChecker,RoleType roleType) {
+    public CustomLogicService(ExcelEmailChecker excelEmailChecker) {
         this.excelEmailChecker = excelEmailChecker;
-        this.roleType = roleType;
     }
 
     public Set<RoleType> assignRoles(String email) {

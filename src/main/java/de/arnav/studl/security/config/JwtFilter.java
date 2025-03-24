@@ -1,6 +1,9 @@
 package de.arnav.studl.security.config;
 
 import de.arnav.studl.exception.JwtAuthenticationException;
+import de.arnav.studl.exception.UserNotFoundException;
+import de.arnav.studl.model.User;
+import de.arnav.studl.repository.UserJpaRepository;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.security.service.MyUserDetailService;
@@ -24,11 +27,13 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final MyUserDetailService myUserDetailService;
     private final AuthService authService;
+    private final UserJpaRepository userJpaRepository;
 
-    public JwtFilter(JwtService jwtService,MyUserDetailService myUserDetailService,AuthService authService) {
+    public JwtFilter(JwtService jwtService, MyUserDetailService myUserDetailService, AuthService authService, UserJpaRepository userJpaRepository) {
         this.jwtService=jwtService;
         this.myUserDetailService=myUserDetailService;
         this.authService=authService;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Override
@@ -53,9 +58,10 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
+                User user= userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException());
+                UserDetails userDetails = myUserDetailService.loadUserByUsername(user.getUserEmail());
 
-                if(!jwtService.validateToken(token,userDetails)){
+                if(!jwtService.validateToken(token,user)){
                     throw new JwtAuthenticationException();
                 }
 

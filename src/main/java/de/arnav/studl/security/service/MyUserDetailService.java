@@ -1,6 +1,8 @@
 package de.arnav.studl.security.service;
 
 import de.arnav.studl.exception.UserNotFoundException;
+import de.arnav.studl.model.User;
+import de.arnav.studl.repository.UserJpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,11 +19,7 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userJpaRepository.findByEmail(email);
-
-        if(user ==null){
-            throw new UserNotFoundException();
-        }
+        User user = userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException());
 
         return new UserPrincipal(user);
     }

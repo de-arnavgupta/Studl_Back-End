@@ -1,6 +1,9 @@
 package de.arnav.studl.security.service;
 
 import de.arnav.studl.exception.JwtAuthenticationException;
+import de.arnav.studl.model.RoleType;
+import de.arnav.studl.model.User;
+import de.arnav.studl.repository.UserJpaRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -31,8 +34,8 @@ public class JwtService {
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        User user=userJpaRepository.findUserByEmail(email).orElseThrow(()-> new  JwtAuthenticationException());
-        Set<RoleType> roles=user.getRoles();
+        User user=userJpaRepository.findByUserEmail(email).orElseThrow(()-> new  JwtAuthenticationException());
+        Set<RoleType> roles=user.getRoleType();
 
         List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
 
@@ -75,10 +78,10 @@ public class JwtService {
     }
 
 
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, User user) {
         try{
             final String email=extractEmail(token);
-            return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
+            return (email.equals(user.getUserEmail()) && !isTokenExpired(token));
         } catch(Exception e){
             throw new JwtAuthenticationException();
         }
