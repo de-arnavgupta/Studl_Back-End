@@ -1,10 +1,10 @@
 package de.arnav.studl.security.config;
 
+import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.security.service.MyUserDetailService;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,9 +15,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
-import java.security.SignatureException;
+
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -49,8 +48,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // Check if token is blacklisted (User has logged out)
             if (authService.isTokenBlacklisted(token)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
-                return;
+                throw new JwtAuthenticationException();
             }
 
 
@@ -58,23 +56,17 @@ public class JwtFilter extends OncePerRequestFilter {
                 UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
 
                 if(!jwtService.validateToken(token,userDetails)){
-                    throw new JwtAuthenticationException("Invalid or expired JWT token");
+                    throw new JwtAuthenticationException();
                 }
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-        } catch(ExpiredJwtException e){
-            throw new JwtAuthenticationException("JWT token has expired",e);
-        } catch (MalformedJwtException e) {
-            throw new JwtAuthenticationException("Malformed JWT token", e);
-        } catch (SignatureException e) {
-            throw new JwtAuthenticationException("Invalid JWT signature", e);
-        } catch (IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is missing or invalid", e);
+        } catch(JwtException e){
+            throw new JwtAuthenticationException(e);
         } catch (Exception e) {
-            throw new JwtAuthenticationException("An unexpected error occurred during authentication", e);
+            throw new JwtAuthenticationException(e);
         }
 
         filterChain.doFilter(request, response);

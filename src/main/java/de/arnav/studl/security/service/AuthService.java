@@ -1,6 +1,8 @@
 package de.arnav.studl.security.service;
 
 import com.nimbusds.openid.connect.sdk.assurance.evidences.Organization;
+import de.arnav.studl.exception.InvalidCredentialsException;
+import de.arnav.studl.exception.LogoutFailedException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -22,20 +24,18 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final Email email;
     private final OrganizationJpaRepository organizationJpaRepository;
-    private final TokenBlackListRepository tokenBlackListRepository;
+    private final TokenBlacklistRepository tokenBlackListRepository;
 
-    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService,Email email,OrganizationJpaRepository organizationJpaRepository,TokenBlacklistRepository tokenBlacklistRepository) {
+    public AuthService(AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService,OrganizationJpaRepository organizationJpaRepository,TokenBlacklistRepository tokenBlacklistRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
-        this.email = email;
         this.organizationJpaRepository = organizationJpaRepository;
-        this.tokenBlackListRepository=tokenBlacklistRepository;
+        this.tokenBlacklistRepository=tokenBlacklistRepository;
     }
 
-    //for login
+    //for login Authenticate user and return JWT token.
 
     public String authenticateUser(String email,String password) {
         try{
@@ -47,31 +47,42 @@ public class AuthService {
 
             return jwtService.generateToken(email);
         } catch(BadCredentialsException e){
-            throw new BadCredentialsException("Invalid email or password");
-        }
-        catch(Exception e){
-            throw new RuntimeException("Authenticaiton failed"+e.getMessage());
+            throw new InvalidCredentialsException();
         }
     }
 
-
-
-
+    //Verify if an email belongs to a valid organization
     public boolean verifyOrganization(String email){
-        String domain=email.getDomain(email);
+        String domain=email.getDomainFromEmail(email);
 
-        if(organizationJpaRepository.getOrganizationByDomain(domain)==null){
-            return false;
+        return organizationJpaRepository.findByDomain(domain).isPresent();
+    }
+
+    // Extracts domain from email
+    private String getOrganizationFromEmail(String email) {
+        String domain = email.substring(email.indexOf("@") + 1); // Extracts domain (sst.scaler.com)
+
+        String[] parts = domain.split("\\.");
+
+        if (parts.length >= 2) {
+            return parts[parts.length - 2]; // Extract the second-last part (scaler)
+        } else {
+            return domain; //if domain is not structured as expected
         }
-        return true;
     }
 
 
+    // Add a token to the blacklist.
     public void addToken(String token) {
+        if (isTokenBlacklisted(token)) {
+            return;
+        }
+
         LocalDateTime expirationTime = jwtService.getExpirationTime(token); // Extract expiry from JWT
         tokenBlacklistRepository.save(new BlacklistedToken(token, expirationTime));
     }
 
+   // Check if a token is blacklisted.
     public boolean isTokenBlacklisted(String token) {
         return tokenBlacklistRepository.findByToken(token).isPresent();
     }
@@ -86,9 +97,7 @@ public class AuthService {
                 addToken(token);
             }
         } catch (Exception e){
-            throw new RuntimeException("Logout failed");
+            throw new LogoutFailedException(e);
         }
-
     }
-
 }

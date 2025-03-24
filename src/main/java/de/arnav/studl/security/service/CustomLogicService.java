@@ -1,5 +1,6 @@
 package de.arnav.studl.security.service;
 
+import de.arnav.studl.exception.RoleAssignmentException;
 import de.arnav.studl.security.model.Role;
 import org.springframework.stereotype.Service;
 import java.util.HashSet;
@@ -32,7 +33,7 @@ public class CustomLogicService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Error while assigning roles", e);
+            throw new RoleAssignmentException();
         }
 
         return roles;

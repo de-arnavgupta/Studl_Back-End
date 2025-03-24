@@ -1,21 +1,18 @@
 package de.arnav.studl.security.service;
 
+import de.arnav.studl.exception.JwtAuthenticationException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,14 +31,14 @@ public class JwtService {
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        User user=userJpaRepository.findUserByEmail(email);
+        User user=userJpaRepository.findUserByEmail(email).orElseThrow(()-> new  JwtAuthenticationException());
         Set<RoleType> roles=user.getRoles();
 
         List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
 
         return Jwts.builder()
                 .subject(email)
-                .claim("roles",roles)
+                .claim("roles",role)
                 .issuedAt(new Date(System.currentTimeMillis()))//set issue time
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
                 .signWith(getKey())
@@ -67,10 +64,14 @@ public class JwtService {
 
     //generic method to extract claims from the database
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().verifyWith(getKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        try {
+            return Jwts.parser().verifyWith(getKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (Exception e) {
+            throw new JwtAuthenticationException();
+        }
     }
 
 
@@ -79,7 +80,7 @@ public class JwtService {
             final String email=extractEmail(token);
             return (email.equals(userDetails.getEmail()) && !isTokenExpired(token));
         } catch(Exception e){
-            return false;
+            throw new JwtAuthenticationException();
         }
 
     }
