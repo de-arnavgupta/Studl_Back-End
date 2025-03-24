@@ -7,6 +7,7 @@ import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.repository.OrganizationJpaRepository;
 import de.arnav.studl.service.OrganizationService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         this.organizationJpaRepository = organizationJpaRepository;
     }
 
+    @Transactional
     @Override
     public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
         Organization organization = organizationAdapter.fromCreateDto();
@@ -30,14 +32,14 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationAdapter.toResponseDto(savedOrganization);
     }
 
+    @Transactional
     @Override
     public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
+
         Organization organization = organizationJpaRepository.findById(organizationId).orElseThrow();
+
         if(organizationUpdateDto.getName() != null) {
             organization.setName(organizationUpdateDto.getName());
-        }
-        if(organizationUpdateDto.getDescription() != null) {
-            organization.setDescription(organizationUpdateDto.getDescription());
         }
         if(organizationUpdateDto.getDomain() != null) {
             organization.setDomain(organizationUpdateDto.getDomain());
@@ -52,6 +54,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationAdapter.toResponseDto(savedOrganization);
     }
 
+    @Transactional
     @Override
     public void deleteOrganization(Long organizationId) {
         organizationJpaRepository.deleteById(organizationId);

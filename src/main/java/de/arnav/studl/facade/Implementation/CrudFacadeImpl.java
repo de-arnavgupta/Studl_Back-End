@@ -11,7 +11,7 @@ import de.arnav.studl.service.implementation.OrganizationServiceImpl;
 import de.arnav.studl.service.implementation.UserServiceImpl;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
+import java.util.Set;
 import java.util.List;
 
 @Component
@@ -63,12 +63,12 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public HashSet<RoleType> findRolesByUserId(Long userId) {
+    public Set<RoleType> findRolesByUserId(Long userId) {
         return userRoleService.findRolesByUserId(userId);
     }
 
     @Override
-    public HashSet<RoleType> findRolesByUsername(String username) {
+    public Set<RoleType> findRolesByUsername(String username) {
         return userService.findRolesByUsername(username);
     }
 

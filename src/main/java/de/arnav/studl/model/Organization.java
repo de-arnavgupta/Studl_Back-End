@@ -1,6 +1,6 @@
 package de.arnav.studl.model;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class Organization {
 
@@ -8,10 +8,10 @@ public class Organization {
     private String name;
     private String description;
     private String domain;
-    private HashSet<String> subDomains;
-    private HashSet<String> topLevelDomains;
+    private Set<String> subDomains;
+    private Set<String> topLevelDomains;
 
-    public Organization(Long id, String name, String description, String domain, HashSet<String> subDomains, HashSet<String> topLevelDomains) {
+    public Organization(Long id, String name, String description, String domain, Set<String> subDomains, Set<String> topLevelDomains) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -52,19 +52,19 @@ public class Organization {
         this.domain = domain;
     }
 
-    public HashSet<String> getSubDomains() {
+    public Set<String> getSubDomains() {
         return subDomains;
     }
 
-    public void setSubDomains(HashSet<String> subDomains) {
+    public void setSubDomains(Set<String> subDomains) {
         this.subDomains = subDomains;
     }
 
-    public HashSet<String> getTopLevelDomains() {
+    public Set<String> getTopLevelDomains() {
         return topLevelDomains;
     }
 
-    public void setTopLevelDomains(HashSet<String> topLevelDomains) {
+    public void setTopLevelDomains(Set<String> topLevelDomains) {
         this.topLevelDomains = topLevelDomains;
     }
 

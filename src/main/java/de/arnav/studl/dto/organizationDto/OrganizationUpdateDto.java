@@ -1,37 +1,20 @@
 package de.arnav.studl.dto.organizationDto;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class OrganizationUpdateDto {
 
     private String name;
-    private String description;
     private String domain;
-    private HashSet<String> subDomains;
-    private HashSet<String> topLevelDomains;
+    private Set<String> subDomains;
+    private Set<String> topLevelDomains;
 
-    public OrganizationUpdateDto(String name, String description, String domain, HashSet<String> subDomains, HashSet<String> topLevelDomains) {
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
         this.name = name;
-        this.description = description;
-        this.domain = domain;
-        this.subDomains = subDomains;
-        this.topLevelDomains = topLevelDomains;
-    }
-
-    public HashSet<String> getTopLevelDomains() {
-        return topLevelDomains;
-    }
-
-    public void setTopLevelDomains(HashSet<String> topLevelDomains) {
-        this.topLevelDomains = topLevelDomains;
-    }
-
-    public HashSet<String> getSubDomains() {
-        return subDomains;
-    }
-
-    public void setSubDomains(HashSet<String> subDomains) {
-        this.subDomains = subDomains;
     }
 
     public String getDomain() {
@@ -42,20 +25,19 @@ public class OrganizationUpdateDto {
         this.domain = domain;
     }
 
-    public String getDescription() {
-        return description;
+    public Set<String> getSubDomains() {
+        return subDomains;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setSubDomains(Set<String> subDomains) {
+        this.subDomains = subDomains;
     }
 
-    public String getName() {
-        return name;
+    public Set<String> getTopLevelDomains() {
+        return topLevelDomains;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTopLevelDomains(Set<String> topLevelDomains) {
+        this.topLevelDomains = topLevelDomains;
     }
-
 }

@@ -7,4 +7,8 @@ public class JwtService {
     public String generateToken(String email){
         return null;
     }
+
+    public String extractEmail(String token) {
+        return null;
+    }
 }

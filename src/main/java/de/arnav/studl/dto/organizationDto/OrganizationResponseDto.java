@@ -1,46 +1,51 @@
 package de.arnav.studl.dto.organizationDto;
 
-import java.util.HashSet;
+import java.util.Set;
 
 public class OrganizationResponseDto {
-    private final Long id;
-    private final String name;
-    private final String description;
-    private final String domain;
-    private final HashSet<String> subDomains;
-    private final HashSet<String> topLevelDomains;
-
-    public OrganizationResponseDto(Long id, String name, String description, String domain, HashSet<String> subDomains, HashSet<String> topLevelDomains) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.domain = domain;
-        this.subDomains = subDomains;
-        this.topLevelDomains = topLevelDomains;
-    }
+    private Long id;
+    private String name;
+    private String domain;
+    private Set<String> subDomains;
+    private Set<String> topLevelDomains;
 
     public Long getId() {
         return id;
     }
 
-    public HashSet<String> getTopLevelDomains() {
-        return topLevelDomains;
-    }
-
-    public HashSet<String> getSubDomains() {
-        return subDomains;
-    }
-
-    public String getDomain() {
-        return domain;
-    }
-
-    public String getDescription() {
-        return description;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Set<String> getSubDomains() {
+        return subDomains;
+    }
+
+    public void setSubDomains(Set<String> subDomains) {
+        this.subDomains = subDomains;
+    }
+
+    public Set<String> getTopLevelDomains() {
+        return topLevelDomains;
+    }
+
+    public void setTopLevelDomains(Set<String> topLevelDomains) {
+        this.topLevelDomains = topLevelDomains;
+    }
 }

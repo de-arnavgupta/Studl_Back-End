@@ -3,7 +3,6 @@ package de.arnav.studl.service.implementation;
 import de.arnav.studl.adapter.UserAdapter;
 import de.arnav.studl.adapter.UserRoleAdapter;
 import de.arnav.studl.dto.userDto.UserResponseDto;
-import de.arnav.studl.dto.userRoleDto.UserRoleCreateDto;
 import de.arnav.studl.dto.userRoleDto.UserRoleResponseDto;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserRoleServiceImpl implements UserRoleService {
@@ -38,7 +38,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public HashSet<RoleType> findRolesByUserId(Long userId) {
+    public Set<RoleType> findRolesByUserId(Long userId) {
         User user = userJpaRepository.findById(userId).orElseThrow();
         return user.getRoles();
     }
@@ -89,12 +89,9 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
-    public HashSet<RoleType> getRolesByUserId(Long userId) {
+    public Set<RoleType> getRolesByUserId(Long userId) {
         User user = userJpaRepository.findById(userId).orElseThrow();
         return user.getRoles();
     }
 
-//    @Override
-//    public void removeRoleFromUser(Long userId, RoleType roleType) {
-//    }
 }
