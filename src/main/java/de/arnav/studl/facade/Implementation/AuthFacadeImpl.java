@@ -1,10 +1,14 @@
 package de.arnav.studl.facade.Implementation;
 
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.facade.AuthFacade;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
+import de.arnav.studl.service.implementation.OrganizationServiceImpl;
+import de.arnav.studl.service.implementation.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
@@ -24,8 +28,8 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void organizationRegister(Organization organization) {
-        organizationService.createOrganization(organization);
+    public OrganizationResponseDto organizationRegister(OrganizationCreateDto organizationCreateDto) {
+        return organizationService.createOrganization(organizationCreateDto);
     }
 
     @Override

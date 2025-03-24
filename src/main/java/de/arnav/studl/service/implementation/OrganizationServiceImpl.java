@@ -7,10 +7,12 @@ import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.repository.OrganizationJpaRepository;
 import de.arnav.studl.service.OrganizationService;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationAdapter organizationAdapter;
