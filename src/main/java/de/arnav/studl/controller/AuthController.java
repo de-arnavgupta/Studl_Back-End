@@ -28,12 +28,14 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request){
-       return authFacade.logoutUser(request);
+       authFacade.logoutUser(request);
+       return ResponseEntity.ok("Logout successful");
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody User user){
-        return authFacade.registerUser(user);
+         authFacade.registerUser(user);
+         return ResponseEntity.ok("User registered successfully");
     }
 
 }
