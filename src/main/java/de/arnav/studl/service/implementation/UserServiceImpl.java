@@ -7,12 +7,6 @@ import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
-import de.arnav.studl.model.Organization;
-import de.arnav.studl.model.RoleType;
-import de.arnav.studl.model.User;
-import de.arnav.studl.repository.UserJpaRepository;
-import de.arnav.studl.security.service.CustomLogicService;
-import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +39,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
+        if (userJpaRepository.existsByEmail(userCreateDto.getEmail())) {
+            throw new DuplicateUserException();
+        }
         User user = userAdapter.fromCreateDto(userCreateDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<RoleType> roles = customLogicService.assignRoles(user.getEmail());
@@ -68,12 +65,10 @@ public class UserServiceImpl implements UserService {
             user.setEmail(userUpdateDto.getEmail());
         }
         if(userUpdateDto.getNewPassword() != null && userUpdateDto.getOldPassword() != null) {
-            if(passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
-                user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
+            if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
+                throw new InvalidCredentialsException();
             }
-            else {
-                throw new InvalidPasswordException();
-            }
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
         }
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -83,8 +78,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UserDeleteDto userDeleteDto) {
         String token = userDeleteDto.getJwtToken();
+        if (token == null || token.isBlank()) {
+            throw new JwtAuthenticationException("JWT token is missing.");
+        }
         String email = jwtService.extractEmail(token);
-        userJpaRepository.deleteByEmail();
+        if (email == null) {
+            throw new JwtAuthenticationException("Invalid JWT token, email could not be extracted.");
+        }
+        userJpaRepository.deleteByEmail(email);
     }
 
     @Override

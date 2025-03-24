@@ -1,10 +1,7 @@
 package de.arnav.studl.service;
 
 import de.arnav.studl.dto.userDto.UserResponseDto;
-import de.arnav.studl.dto.userRoleDto.UserRoleCreateDto;
 import de.arnav.studl.dto.userRoleDto.UserRoleResponseDto;
-import de.arnav.studl.model.RoleType;
-import de.arnav.studl.model.User;
 
 import java.util.Set;
 import java.util.List;

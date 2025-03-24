@@ -3,18 +3,18 @@ package de.arnav.studl.dto.organizationDto;
 import java.util.Set;
 
 public class OrganizationResponseDto {
-    private Long id;
+    private Long organizationId;
     private String name;
     private String domain;
-    private Set<String> subDomains;
+    private Set<String> coDomains;
     private Set<String> topLevelDomains;
 
-    public Long getId() {
-        return id;
+    public Long getOrganizationId() {
+        return organizationId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setOrganizationId(Long id) {
+        this.organizationId = id;
     }
 
     public String getName() {
@@ -33,12 +33,12 @@ public class OrganizationResponseDto {
         this.domain = domain;
     }
 
-    public Set<String> getSubDomains() {
-        return subDomains;
+    public Set<String> getCodomains() {
+        return coDomains;
     }
 
-    public void setSubDomains(Set<String> subDomains) {
-        this.subDomains = subDomains;
+    public void setCodomains(Set<String> coDomains) {
+        this.coDomains = coDomains;
     }
 
     public Set<String> getTopLevelDomains() {

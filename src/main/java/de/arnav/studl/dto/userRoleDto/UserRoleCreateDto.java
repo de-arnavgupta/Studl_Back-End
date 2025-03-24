@@ -1,17 +1,15 @@
 package de.arnav.studl.dto.userRoleDto;
 
-import de.arnav.studl.model.RoleType;
-
 public class UserRoleCreateDto {
 
-    private RoleType roleType;
+    private Set<RoleType> roleType;
     private Long userId;
 
-    public RoleType getRoleType() {
+    public Set<RoleType> getRoleType() {
         return roleType;
     }
 
-    public void setRoleType(RoleType roleType) {
+    public void setRoleType(Set<RoleType> roleType) {
         this.roleType = roleType;
     }
 

@@ -6,7 +6,7 @@ public class OrganizationCreateDto {
 
     private String name;
     private String domain;
-    private Set<String> subDomains;
+    private Set<String> codomains;
     private Set<String> topLevelDomains;
 
     public Set<String> getTopLevelDomains() {
@@ -17,12 +17,12 @@ public class OrganizationCreateDto {
         this.topLevelDomains = topLevelDomains;
     }
 
-    public Set<String> getSubDomains() {
-        return subDomains;
+    public Set<String> getCodomains() {
+        return codomains;
     }
 
-    public void setSubDomains(Set<String> subDomains) {
-        this.subDomains = subDomains;
+    public void setCodomains(Set<String> codomains) {
+        this.codomains = codomains;
     }
 
     public String getDomain() {

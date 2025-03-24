@@ -2,6 +2,7 @@ package de.arnav.studl.dto.userDto;
 
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Component
@@ -10,8 +11,26 @@ public class UserResponseDto {
     private Long userId;
     private String name;
     private String email;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
     private Long organizationId;
     private Set<String> roles;
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 
     public Long getUserId() {
         return userId;

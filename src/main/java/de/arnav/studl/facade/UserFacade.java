@@ -3,7 +3,6 @@ package de.arnav.studl.facade;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
-import de.arnav.studl.model.RoleType;
 
 import java.util.List;
 

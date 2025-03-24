@@ -4,16 +4,10 @@ import de.arnav.studl.adapter.UserAdapter;
 import de.arnav.studl.adapter.UserRoleAdapter;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userRoleDto.UserRoleResponseDto;
-import de.arnav.studl.model.RoleType;
-import de.arnav.studl.model.User;
-import de.arnav.studl.model.UserRole;
-import de.arnav.studl.repository.UserJpaRepository;
-import de.arnav.studl.repository.UserRoleJpaRepository;
 import de.arnav.studl.service.UserRoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

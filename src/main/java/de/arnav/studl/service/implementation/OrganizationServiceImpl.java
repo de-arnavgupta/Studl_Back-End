@@ -4,8 +4,6 @@ import de.arnav.studl.adapter.OrganizationAdapter;
 import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
-import de.arnav.studl.model.Organization;
-import de.arnav.studl.repository.OrganizationJpaRepository;
 import de.arnav.studl.service.OrganizationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;

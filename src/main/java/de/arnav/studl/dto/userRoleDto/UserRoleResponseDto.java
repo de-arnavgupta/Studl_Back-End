@@ -1,7 +1,5 @@
 package de.arnav.studl.dto.userRoleDto;
 
-import de.arnav.studl.model.RoleType;
-
 public class UserRoleResponseDto {
 
     private Long userRoleId;

@@ -4,7 +4,6 @@ import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.facade.UserFacade;
-import de.arnav.studl.model.RoleType;
 import de.arnav.studl.service.implementation.UserServiceImpl;
 
 import java.util.List;

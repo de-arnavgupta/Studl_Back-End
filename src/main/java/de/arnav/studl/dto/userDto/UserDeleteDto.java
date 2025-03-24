@@ -1,7 +1,7 @@
 package de.arnav.studl.dto.userDto;
 
 public class UserDeleteDto {
-    String jwtToken;
+    private String jwtToken;
 
     public String getJwtToken() {
         return jwtToken;

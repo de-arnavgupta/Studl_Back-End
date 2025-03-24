@@ -4,7 +4,6 @@ import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
-import de.arnav.studl.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 
 
