@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
     Optional<Organization> findByDomain(String domain);
-    Optional<List<Organization>> findByNameContaining(String keyword);
+    List<Organization> findByNameContaining(String keyword);
 }
