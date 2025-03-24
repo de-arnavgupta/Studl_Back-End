@@ -1,5 +1,8 @@
 package de.arnav.studl.facade;
 
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
@@ -19,11 +22,11 @@ public interface CrudFacade {
     RoleType findRoleByUserId(Long userId);
     RoleType findRoleByUsername(String username);
     Boolean hasRole(Long userId, RoleType roleType);
-    void createOrganization(Organization organization);
-    void updateOrganization(Organization organization, Long organizationId);
+    OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto);
+    OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId);
     void deleteOrganization(Long organizationId);
-    Organization findOrganizationById(Long organizationId);
-    List<Organization> findAllOrganizations();
-    List<Organization> findOrganizationsByName(String name);
+    OrganizationResponseDto findOrganizationById(Long organizationId);
+    List<OrganizationResponseDto> findAllOrganizations();
+    List<OrganizationResponseDto> findOrganizationsByName(String name);
 
 }

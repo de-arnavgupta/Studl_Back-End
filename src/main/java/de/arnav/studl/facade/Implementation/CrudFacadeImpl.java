@@ -1,10 +1,15 @@
 package de.arnav.studl.facade.Implementation;
 
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.facade.CrudFacade;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.service.UserRoleService;
+import de.arnav.studl.service.implementation.OrganizationServiceImpl;
+import de.arnav.studl.service.implementation.UserServiceImpl;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -78,13 +83,13 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public void createOrganization(Organization organization) {
-        organizationService.createOrganization(organization);
+    public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
+        organizationService.createOrganization(organizationCreateDto);
     }
 
     @Override
-    public void updateOrganization(Organization organization, Long organizationId) {
-        organizationService.updateOrganization(organization, organizationId);
+    public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
+        organizationService.updateOrganization(organizationUpdateDto, organizationId);
     }
 
     @Override
@@ -93,17 +98,17 @@ public class CrudFacadeImpl implements CrudFacade {
     }
 
     @Override
-    public List<Organization> findAllOrganizations() {
+    public List<OrganizationResponseDto> findAllOrganizations() {
         return organizationService.findAllOrganizations();
     }
 
     @Override
-    public Organization findOrganizationById(Long organizationId) {
+    public OrganizationResponseDto findOrganizationById(Long organizationId) {
         return organizationService.findOrganizationById(organizationId);
     }
 
     @Override
-    public List<Organization> findOrganizationsByName(String name) {
+    public List<OrganizationResponseDto> findOrganizationsByName(String name) {
         return organizationService.findOrganizationsByName(name);
     }
 }
