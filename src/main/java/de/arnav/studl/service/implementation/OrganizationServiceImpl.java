@@ -4,6 +4,7 @@ import de.arnav.studl.adapter.organization.OrganizationAdapter;
 import de.arnav.studl.dto.organization.OrganizationCreateDto;
 import de.arnav.studl.dto.organization.OrganizationResponseDto;
 import de.arnav.studl.dto.organization.OrganizationUpdateDto;
+import de.arnav.studl.exception.ResourceNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.repository.OrganizationRepository;
 import de.arnav.studl.service.template.OrganizationService;
@@ -35,14 +36,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto getOrganizationById(Long id) {
         Organization org = organizationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Organization not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + id));
         return organizationAdapter.toResponseDto(org);
     }
 
     @Override
     public OrganizationResponseDto updateOrganization(Long id, OrganizationUpdateDto dto) {
         Organization org = organizationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Organization not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + id));
         org = organizationAdapter.updateEntityFromUpdateDto(dto, org);
         Organization updatedOrg = organizationRepository.save(org);
         return organizationAdapter.toResponseDto(updatedOrg);
@@ -50,6 +51,9 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     @Override
     public void deleteOrganization(Long id) {
+        if(!organizationRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Organization not found with id " + id);
+        }
         organizationRepository.deleteById(id);
     }
 

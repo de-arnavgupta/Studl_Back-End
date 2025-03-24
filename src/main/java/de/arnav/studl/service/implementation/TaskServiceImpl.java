@@ -4,7 +4,10 @@ import de.arnav.studl.adapter.task.TaskAdapter;
 import de.arnav.studl.dto.task.TaskCreateDto;
 import de.arnav.studl.dto.task.TaskResponseDto;
 import de.arnav.studl.dto.task.TaskUpdateDto;
+import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.model.Label;
 import de.arnav.studl.model.Task;
+import de.arnav.studl.model.User;
 import de.arnav.studl.model.enums.TaskPriority;
 import de.arnav.studl.model.enums.TaskStatus;
 import de.arnav.studl.repository.LabelRepository;
@@ -15,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -60,38 +65,48 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponseDto getTaskById(Long id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
         return taskAdapter.toResponseDto(task);
     }
 
     @Override
     public TaskResponseDto updateTask(Long id, TaskUpdateDto dto) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+
         task = taskAdapter.updateEntityFromUpdateDto(dto, task);
-        if (dto.getAssigneeId() != null) {
-            userRepository.findById(dto.getAssigneeId())
-                    .ifPresent(task::setAssignee);
-        }
-        if (dto.getReporterId() != null) {
-            userRepository.findById(dto.getReporterId())
-                    .ifPresent(task::setReporter);
-        }
-        if (dto.getLabelIds() != null) {
+
+       if (dto.getAssigneeId() != null) {
+            User assignee = userRepository.findById(dto.getAssigneeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + dto.getAssigneeId()));
+            task.setAssignee(assignee);
+       }
+
+       if (dto.getReporterId() != null) {
+            User reporter = userRepository.findById(dto.getReporterId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + dto.getReporterId()));
+            task.setReporter(reporter);
+       }
+
+       if (dto.getLabelIds() != null) {
+            Set<Label> labels = dto.getLabelIds().stream()
+                    .map(labelId -> labelRepository.findById(labelId)
+                            .orElseThrow(() -> new ResourceNotFoundException("Label not found with id " + labelId)))
+                    .collect(Collectors.toSet());
             task.getLabels().clear();
-            Task finalTask = task;
-            dto.getLabelIds().forEach(labelId ->
-                    labelRepository.findById(labelId)
-                            .ifPresent(label -> finalTask.getLabels().add(label))
-            );
-        }
-        Task updatedTask = taskRepository.save(task);
-        return taskAdapter.toResponseDto(updatedTask);
+            task.setLabels(labels);
+       }
+
+       Task updatedTask = taskRepository.save(task);
+       return taskAdapter.toResponseDto(updatedTask);
     }
+
 
     @Override
     public void deleteTask(Long id) {
-        taskRepository.deleteById(id);
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
+        taskRepository.delete(task);
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.arnav.studl.adapter.label.LabelAdapter;
 import de.arnav.studl.dto.label.LabelCreateDto;
 import de.arnav.studl.dto.label.LabelResponseDto;
 import de.arnav.studl.dto.label.LabelUpdateDto;
+import de.arnav.studl.exception.ResourceNotFoundException;
 import de.arnav.studl.model.Label;
 import de.arnav.studl.repository.LabelRepository;
 import de.arnav.studl.service.template.LabelService;
@@ -34,14 +35,14 @@ public class LabelServiceImpl implements LabelService {
     @Override
     public LabelResponseDto getLabelById(Long id) {
         Label label = labelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Label not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Label not found with id " + id));
         return labelAdapter.toResponseDto(label);
     }
 
     @Override
     public LabelResponseDto updateLabel(Long id, LabelUpdateDto dto) {
         Label label = labelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Label not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Label not found with id " + id));
         label = labelAdapter.updateEntityFromUpdateDto(dto, label);
         Label updatedLabel = labelRepository.save(label);
         return labelAdapter.toResponseDto(updatedLabel);
@@ -49,7 +50,9 @@ public class LabelServiceImpl implements LabelService {
 
     @Override
     public void deleteLabel(Long id) {
-        labelRepository.deleteById(id);
+        Label label = labelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Label not found with id " + id));
+        labelRepository.delete(label);
     }
 
     @Override

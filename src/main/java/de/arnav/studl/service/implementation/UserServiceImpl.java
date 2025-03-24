@@ -4,6 +4,8 @@ import de.arnav.studl.adapter.user.UserAdapter;
 import de.arnav.studl.dto.user.UserCreateDto;
 import de.arnav.studl.dto.user.UserResponseDto;
 import de.arnav.studl.dto.user.UserUpdateDto;
+import de.arnav.studl.exception.ResourceNotFoundException;
+import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import de.arnav.studl.model.UserRole;
 import de.arnav.studl.model.enums.Role;
@@ -34,10 +36,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserCreateDto dto) {
         User user = userAdapter.fromCreateDto(dto);
-        if (dto.getOrganizationId() != null) {
-            organizationRepository.findById(dto.getOrganizationId())
-                    .ifPresent(user::setOrganization);
-        }
+
+         Organization org = organizationRepository.findById(dto.getOrganizationId())
+             .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
+         user.setOrganization(org);
+
         if(dto.getRoles() != null && !dto.getRoles().isEmpty()) {
             List<UserRole> roles = dto.getRoles().stream().map(roleStr -> {
                 UserRole userRole = new UserRole();
@@ -47,21 +50,23 @@ public class UserServiceImpl implements UserService {
             }).collect(Collectors.toList());
             user.setUserRoles(roles);
         }
+
         User savedUser = userRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
     }
 
+
     @Override
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public UserResponseDto getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + email));
         return userAdapter.toResponseDto(user);
     }
 
@@ -75,11 +80,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUser(Long id, UserUpdateDto dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + id));
         user = userAdapter.updateEntityFromUpdateDto(dto, user);
         if (dto.getOrganizationId() != null) {
-            organizationRepository.findById(dto.getOrganizationId())
-                    .ifPresent(user::setOrganization);
+            Organization organization = organizationRepository.findById(dto.getOrganizationId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + dto.getOrganizationId()));
+            user.setOrganization(organization);
         }
         User updatedUser = userRepository.save(user);
         return userAdapter.toResponseDto(updatedUser);
@@ -87,6 +93,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResourceNotFoundException("User not found with id " + id);
+        }
         userRepository.deleteById(id);
     }
 
