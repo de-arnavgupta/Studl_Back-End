@@ -22,7 +22,10 @@ public class User {
 
     private String userEmail;
 
-    private Long organisationRollNo;
+    @ManyToOne
+    private Organization organization;
+
+    private String organisationRollNo;
 
     private Timestamp createdAt;
 
@@ -35,12 +38,13 @@ public class User {
     //Default
     public User() {}
 
-    public User(Long userId, RoleType roleType, String userName, String userEmail, Long organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
+    public User(Long userId, RoleType roleType, String userName, String userEmail, Organization organization, String organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
 
         this.userId = userId;
         this.roleType = roleType;
         this.userName = userName;
         this.userEmail = userEmail;
+        this.organization = organization;
         this.organisationRollNo = organisationRollNo;
         this.provider = provider;
         this.providerId = providerId;
@@ -75,10 +79,17 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public Long getOrganisationRollNo() {
+    public Organization getOrganization() {
+        return organization;
+    }
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    public String getOrganisationRollNo() {
         return organisationRollNo;
     }
-    public void setOrganisationRollNo(Long organisationRollNo) {
+    public void setOrganisationRollNo(String organisationRollNo) {
         this.organisationRollNo = organisationRollNo;
     }
 
