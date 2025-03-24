@@ -97,7 +97,7 @@ public class AuthService {
                 addToken(token);
             }
         } catch (Exception e){
-            throw new LogoutFailedException(e);
+            throw new LogoutFailedException();
         }
     }
 }

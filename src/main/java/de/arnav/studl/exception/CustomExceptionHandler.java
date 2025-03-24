@@ -14,28 +14,44 @@ public class CustomExceptionHandler {
     // Security & Authentication Exceptions
     @ExceptionHandler(JwtAuthenticationException.class)
     public ResponseEntity<Map<String, Object>> handleJwtAuthenticationException(JwtAuthenticationException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", "Invalid or expired JWT token");
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Unauthorized", ex.getMessage());
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        return buildResponse(HttpStatus.UNAUTHORIZED, "Authentication Failed", "Invalid email or password");
+        return buildResponse(HttpStatus.UNAUTHORIZED, "Authentication Failed", ex.getMessage());
     }
 
     @ExceptionHandler(LogoutFailedException.class)
     public ResponseEntity<Map<String, Object>> handleLogoutFailedException(LogoutFailedException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "Logout Failed", "Logout attempt failed. Token missing or invalid.");
+        return buildResponse(HttpStatus.BAD_REQUEST, "Logout Failed", ex.getMessage());
     }
 
     //User Management Exceptions
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
-        return buildResponse(HttpStatus.NOT_FOUND, "User Not Found", "No user found with the given details");
+        return buildResponse(HttpStatus.NOT_FOUND, "User Not Found", ex.getMessage());
     }
 
     @ExceptionHandler(RoleAssignmentException.class)
     public ResponseEntity<Map<String, Object>> handleRoleAssignmentException(RoleAssignmentException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "Role Assignment Error", "An error occurred while assigning roles");
+        return buildResponse(HttpStatus.BAD_REQUEST, "Role Assignment Error", ex.getMessage());
+    }
+
+    // Organization Exceptions
+    @ExceptionHandler(OrganizationNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleOrganizationNotFoundException(OrganizationNotFoundException ex) {
+        return buildResponse(HttpStatus.NOT_FOUND, "Organization Not Found", ex.getMessage());
+    }
+
+    @ExceptionHandler(DuplicateOrganizationException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateOrganizationException(DuplicateOrganizationException ex) {
+        return buildResponse(HttpStatus.CONFLICT, "Duplicate Organization", ex.getMessage());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Invalid argument provided.");
     }
 
 
