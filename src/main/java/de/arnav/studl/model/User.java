@@ -38,7 +38,7 @@ public class User {
     //Default
     public User() {}
 
-    public User(Long userId, RoleType roleType, String userName, String userEmail, Organization organization, String organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
+    public User(Long userId, Set<RoleType> roleType, String userName, String userEmail, Organization organization, String organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId) {
 
         this.userId = userId;
         this.roleType = roleType;
