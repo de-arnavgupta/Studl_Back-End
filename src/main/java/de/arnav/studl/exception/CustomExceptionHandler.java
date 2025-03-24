@@ -38,6 +38,11 @@ public class CustomExceptionHandler {
         return buildResponse(HttpStatus.BAD_REQUEST, "Role Assignment Error", ex.getMessage());
     }
 
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicateUserException(DuplicateUserException ex) {
+        return buildResponse(HttpStatus.CONFLICT, "Duplicate User", ex.getMessage());
+    }
+
     // Organization Exceptions
     @ExceptionHandler(OrganizationNotFoundException.class)
     public ResponseEntity<Map<String, Object>> handleOrganizationNotFoundException(OrganizationNotFoundException ex) {
