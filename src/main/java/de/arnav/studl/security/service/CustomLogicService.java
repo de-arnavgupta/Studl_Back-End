@@ -11,7 +11,7 @@ public class CustomLogicService {
 
     private final ExcelEmailChecker excelEmailChecker;
 
-    private static final String EXCEL_FILE_PATH = "C:/path_to_your_file/admins.xlsx";
+    private static final String EXCEL_FILE_PATH = "src/main/resources/admins.xlsx";
 
     public CustomLogicService(ExcelEmailChecker excelEmailChecker) {
         this.excelEmailChecker = excelEmailChecker;
