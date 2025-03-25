@@ -5,8 +5,8 @@ import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.facade.UserFacade;
-import de.arnav.studl.model.RoleType;
 import de.arnav.studl.service.implementation.UserServiceImpl;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +20,7 @@ public class UserFacadeImpl implements UserFacade {
         this.userService = userService;
     }
 
+    @Transactional
     @Override
     public void delete(UserDeleteDto userDeleteDto) {
         userService.deleteUser(userDeleteDto);

@@ -2,7 +2,6 @@ package de.arnav.studl.model;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -16,7 +15,7 @@ public class User {
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
     @Enumerated(EnumType.STRING)
-    private Set<RoleType> roleType = new HashSet<>();
+    private Set<RoleType> roleType;
 
     private String userName;
 
