@@ -1,8 +1,6 @@
 package de.arnav.studl.model;
 
 import jakarta.persistence.*;
-import org.apache.poi.hssf.record.pivottable.StreamIDRecord;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.sql.Timestamp;

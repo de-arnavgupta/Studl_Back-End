@@ -111,7 +111,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (name == null) {
             throw new IllegalArgumentException();
         }
-        List<Organization> organizations = organizationJpaRepository.findByName(name);
+        List<Organization> organizations = organizationJpaRepository.findByOrganizationName(name);
         List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();
         for(Organization organization : organizations) {
             organizationResponseDtos.add(organizationAdapter.toResponseDto(organization));
