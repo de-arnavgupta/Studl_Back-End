@@ -4,6 +4,7 @@ import de.arnav.studl.dto.authDto.LoginRequest;
 import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.facade.AuthFacade;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,String>> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<Map<String,String>> login(@Valid @RequestBody LoginRequest loginRequest){
             String token=authFacade.userLogin(loginRequest.getEmail(),loginRequest.getPassword());
 
             return ResponseEntity.ok(Map.of("token",token));
@@ -34,7 +35,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Map<String,String>> registerUser(@RequestBody UserCreateDto user){
+    public ResponseEntity<Map<String,String>> registerUser(@Valid @RequestBody UserCreateDto user){
          String token = authFacade.userRegister(user);
          return ResponseEntity.ok(Map.of("token",token));
     }

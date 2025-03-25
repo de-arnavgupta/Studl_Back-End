@@ -3,9 +3,7 @@ package de.arnav.studl.security.config;
 import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.exception.UserNotFoundException;
 import de.arnav.studl.model.User;
-import de.arnav.studl.repository.TokenBlacklistJpaRepository;
 import de.arnav.studl.repository.UserJpaRepository;
-import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.security.service.MyUserDetailService;
 import io.jsonwebtoken.JwtException;
@@ -13,7 +11,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.hibernate.validator.internal.util.stereotypes.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -57,7 +54,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
             token = authHeader.substring(7);
-            email=jwtService.extractEmail(token);
+            email = jwtService.extractEmail(token);
 
 
             // Check if token is blacklisted (User has logged out)

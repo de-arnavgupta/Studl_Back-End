@@ -1,12 +1,21 @@
 package de.arnav.studl.dto.organizationDto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Set;
 
 public class OrganizationResponseDto {
+
+    @NotNull(message = "Organization Id cannot be null")
     private Long organizationId;
+    @NotBlank(message = "Name cannot be blank")
     private String name;
+    @NotBlank(message = "Domain name cannot be blank")
     private String domain;
+    @NotNull(message = "Subdomains cannot be null")
     private Set<String> coDomains;
+    @NotNull(message = "TLDs cannot be null")
     private Set<String> topLevelDomains;
 
     public Long getOrganizationId() {

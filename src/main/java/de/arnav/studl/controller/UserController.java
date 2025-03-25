@@ -17,13 +17,13 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{email}")
-    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+    public ResponseEntity<String> deleteUser(@Valid @PathVariable String email) {
         userFacade.delete(email);
         return ResponseEntity.ok("✅ User deleted successfully");
     }
 
     @GetMapping("fetchBy/{email}")
-    public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable @Valid String email) {
+    public ResponseEntity<UserResponseDto> getUserByEmail(@Valid @PathVariable String email) {
         UserResponseDto user = userFacade.findByEmail(email);
         return ResponseEntity.ok(user);
     }

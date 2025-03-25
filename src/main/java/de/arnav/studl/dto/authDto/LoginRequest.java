@@ -1,7 +1,12 @@
 package de.arnav.studl.dto.authDto;
 
+import jakarta.validation.constraints.NotBlank;
+
 public class LoginRequest {
+
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+    @NotBlank(message = "Password cannot be blank")
     private String password;
 
     // Getters & Setters

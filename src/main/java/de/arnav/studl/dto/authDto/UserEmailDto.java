@@ -1,8 +1,12 @@
 package de.arnav.studl.dto.authDto;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Arrays;
 
 public class UserEmailDto {
+
+    @NotBlank(message = "Email cannot be blank")
     private String userEmail;
     private String identifier;
     private String domain;

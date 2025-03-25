@@ -11,21 +11,17 @@ public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organizationId;
-
     private String organizationName;
-
     private String domainName;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "organization_tld", joinColumns = @JoinColumn(name = "organization_id"))
-    private Set<String> tld = new HashSet<>();
+    private Set<String> tld = new HashSet<>(); // Do not remove initialization. Check how Eager works.
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
-    private Set<String> subDomainNames = new HashSet<>();
-
+    private Set<String> subDomainNames = new HashSet<>(); // Do not remove initialization. Check how Eager works.
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
 
     public Organization() {

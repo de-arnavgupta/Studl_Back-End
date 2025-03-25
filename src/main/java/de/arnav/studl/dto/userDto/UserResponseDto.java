@@ -1,6 +1,9 @@
 package de.arnav.studl.dto.userDto;
 
+import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -9,12 +12,19 @@ import java.util.Set;
 @Component
 public class UserResponseDto {
 
+    @NotNull(message = "User Id cannot be null")
     private Long userId;
+    @NotBlank(message = "Name cannot be blank")
     private String name;
+    @NotBlank(message = "Email cannot be blank")
     private String email;
+    @NotNull(message = "Time of creation cannot be null")
     private Timestamp createdAt;
+    @NotNull(message = "Time of update cannot be null")
     private Timestamp updatedAt;
-    private Long organizationId;
+//    @NotNull(message = "Organization cannot be null")
+    private Organization organization;
+    @NotNull(message = "Roles cannot be null")
     private Set<RoleType> roles;
 
     public Timestamp getCreatedAt() {
@@ -57,12 +67,12 @@ public class UserResponseDto {
         this.email = email;
     }
 
-    public Long getOrganizationId() {
-        return organizationId;
+    public Organization getOrganization() {
+        return organization;
     }
 
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
+    public void setOrganizationId(Organization organization) {
+        this.organization = organization;
     }
 
     public Set<RoleType> getRoles() {
