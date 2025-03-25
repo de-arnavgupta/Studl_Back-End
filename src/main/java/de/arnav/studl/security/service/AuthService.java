@@ -73,7 +73,7 @@ public class AuthService {
 
     // Add a token to the blacklist.
     public void addToken(String token) {
-        if (isTokenBlacklisted(token)) {
+        if (jwtService.isTokenBlacklisted(token)) {
             return;
         }
 
@@ -81,10 +81,6 @@ public class AuthService {
         tokenBlacklistJpaRepository.save(new BlacklistedToken(token, expirationTime));
     }
 
-   // Check if a token is blacklisted.
-    public boolean isTokenBlacklisted(String token) {
-        return tokenBlacklistJpaRepository.findByToken(token).isPresent();
-    }
 
     //method to logout
     public void logout(HttpServletRequest request) {

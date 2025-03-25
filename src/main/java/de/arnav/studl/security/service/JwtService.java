@@ -3,6 +3,7 @@ package de.arnav.studl.security.service;
 import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
+import de.arnav.studl.repository.TokenBlacklistJpaRepository;
 import de.arnav.studl.repository.UserJpaRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,11 +24,12 @@ import java.util.stream.Collectors;
 public class JwtService {
     private final String secretKey;
     private final UserJpaRepository userJpaRepository;
+    private final TokenBlacklistJpaRepository tokenBlacklistJpaRepository;
 
-
-    public JwtService(@Value("${jwt.secret}") String secretKey,UserJpaRepository userJpaRespository) {
+    public JwtService(@Value("${jwt.secret}") String secretKey,UserJpaRepository userJpaRespository,TokenBlacklistJpaRepository tokenBlacklistJpaRepository) {
         this.secretKey = secretKey;
         this.userJpaRepository=userJpaRespository;
+        this.tokenBlacklistJpaRepository=tokenBlacklistJpaRepository;
 
     }
 
@@ -86,6 +88,11 @@ public class JwtService {
             throw new JwtAuthenticationException();
         }
 
+    }
+
+    // Check if a token is blacklisted.
+    public boolean isTokenBlacklisted(String token) {
+        return tokenBlacklistJpaRepository.findByToken(token).isPresent();
     }
 
     private boolean isTokenExpired(String token) {

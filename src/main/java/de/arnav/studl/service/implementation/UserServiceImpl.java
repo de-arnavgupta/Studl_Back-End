@@ -95,7 +95,7 @@ public class UserServiceImpl implements UserService {
         if (email == null) {
             throw new JwtAuthenticationException();
         }
-        userJpaRepository.deleteByEmail(email);
+        userJpaRepository.deleteByUserEmail(email);
     }
 
     @Transactional

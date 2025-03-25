@@ -9,8 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface OrganizationJpaRepository extends JpaRepository<Organization, Long> {
-    List<Organization> findByOrganizationName(String name);
+    List<Organization> findByOrganizationName(String organizationName);
     Optional<Organization> findByDomainName(String domainName);
-    boolean existsByDomain(String domain);
-    Integer countUsersByOrganization(Long organizationId);
+    boolean existsByDomainName(String domain);
+    Integer countUsersByOrganizationId(Long organizationId);
 }

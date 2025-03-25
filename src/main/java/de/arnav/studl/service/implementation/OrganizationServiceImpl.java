@@ -29,7 +29,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Transactional
     @Override
     public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
-        if (organizationJpaRepository.existsByDomain(organizationCreateDto.getDomain())) {
+        if (organizationJpaRepository.existsByDomainName(organizationCreateDto.getDomain())) {
             throw new DuplicateOrganizationException();
         }
         Organization organization = organizationAdapter.fromCreateDto(organizationCreateDto);
@@ -76,14 +76,14 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Integer countUsersByOrganization(Long organizationId) {
+    public Integer countUsersByOrganizationId(Long organizationId) {
         if (organizationId == null) {
             throw new IllegalArgumentException();
         }
         if (!organizationJpaRepository.existsById(organizationId)) {
             throw new OrganizationNotFoundException();
         }
-        return organizationJpaRepository.countUsersByOrganization(organizationId);
+        return organizationJpaRepository.countUsersByOrganizationId(organizationId);
     }
 
     @Override

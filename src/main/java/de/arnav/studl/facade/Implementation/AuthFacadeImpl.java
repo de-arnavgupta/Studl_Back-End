@@ -11,23 +11,20 @@ import de.arnav.studl.service.implementation.OrganizationServiceImpl;
 import de.arnav.studl.service.implementation.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class AuthFacadeImpl implements AuthFacade {
 
     private final AuthService authService;
     private final JwtService jwtService;
     private final UserServiceImpl userService;
-    private final OrganizationServiceImpl organizationService;
 
-    public AuthFacadeImpl(AuthService authService, JwtService jwtService, UserServiceImpl userService, OrganizationServiceImpl organizationService) {
+    public AuthFacadeImpl(AuthService authService, JwtService jwtService, UserServiceImpl userService) {
         this.authService = authService;
         this.jwtService = jwtService;
         this.userService = userService;
-        this.organizationService = organizationService;
     }
-
-
 
     @Override
     public UserResponseDto userRegister(UserCreateDto userCreateDto) {

@@ -5,9 +5,11 @@ import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.facade.OrganizationFacade;
 import de.arnav.studl.service.OrganizationService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class OrganizationFacadeImpl implements OrganizationFacade {
 
     private final OrganizationService organizationService;
@@ -33,7 +35,7 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
 
     @Override
     public Integer countUsers(Long organizationId) {
-        return organizationService.countUsersByOrganization(organizationId);
+        return organizationService.countUsersByOrganizationId(organizationId);
     }
 
     @Override

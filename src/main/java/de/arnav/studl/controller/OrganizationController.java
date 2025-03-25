@@ -13,8 +13,8 @@ public class OrganizationController {
     private final OrganizationFacade organizationFacade;
 
 
-    public OrganizationController(OrganizationController organizationController) {
-        this.organizationFacade = organizationController.organizationFacade;
+    public OrganizationController(OrganizationFacade organizationFacade) {
+        this.organizationFacade = organizationFacade;
     }
 
     @PostMapping("/organization/register")
