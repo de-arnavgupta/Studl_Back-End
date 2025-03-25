@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class JwtService {
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        User user=userJpaRepository.findByUserEmail(email).orElseThrow(()-> new  JwtAuthenticationException());
+        User user=userJpaRepository.findByUserEmail(email).orElseThrow(()-> new JwtAuthenticationException());
         Set<RoleType> roles=user.getRoleType();
 
         List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
@@ -76,10 +77,11 @@ public class JwtService {
     //generic method to extract claims from the database
     private Claims extractAllClaims(String token) {
         try {
-            return Jwts.parser().verifyWith(getKey())
+            Claims claims = Jwts.parser().verifyWith(getKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
+            return claims;
         } catch (Exception e) {
             System.err.println();
             throw new JwtAuthenticationException("Error in extracting claims");
