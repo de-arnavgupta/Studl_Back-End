@@ -16,11 +16,11 @@ public class Organization {
 
     private String domainName;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "organization_tld", joinColumns = @JoinColumn(name = "organization_id"))
     private Set<String> tld = new HashSet<>();
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
     private Set<String> subDomainNames = new HashSet<>();
 

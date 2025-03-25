@@ -12,8 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<RoleType> roleType;
 
@@ -22,6 +22,7 @@ public class User {
     private String userEmail;
 
     @ManyToOne
+    @JoinColumn(name = "organization_id")
     private Organization organization;
 
     private String organisationRollNo;
