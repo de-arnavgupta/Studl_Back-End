@@ -88,13 +88,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(UserDeleteDto userDeleteDto) {
         String token = userDeleteDto.getJwtToken();
-        if (token == null || token.isBlank()) {
-            throw new JwtAuthenticationException();
-        }
+
         String email = jwtService.extractEmail(token);
-        if (email == null) {
-            throw new JwtAuthenticationException();
-        }
+
         userJpaRepository.deleteByUserEmail(email);
     }
 

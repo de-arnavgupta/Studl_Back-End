@@ -43,12 +43,15 @@ public class JwtService {
         Set<RoleType> roles=user.getRoleType();
 
         List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
+        claims.put("role",role);
 
         return Jwts.builder()
+                .claims()
+                .add(claims)
                 .subject(email)
-                .claim("roles",role)
                 .issuedAt(new Date(System.currentTimeMillis()))//set issue time
                 .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30*1000L))
+                .and()
                 .signWith(getKey())
                 .compact();
 
@@ -78,8 +81,8 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (Exception e) {
-            System.err.println("Error in extracting claims");
-            throw new JwtAuthenticationException();
+            System.err.println();
+            throw new JwtAuthenticationException("Error in extracting claims");
         }
     }
 

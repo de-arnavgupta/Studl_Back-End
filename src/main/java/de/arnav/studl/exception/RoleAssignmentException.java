@@ -1,7 +1,7 @@
 package de.arnav.studl.exception;
 
 public class RoleAssignmentException extends RuntimeException {
-    public RoleAssignmentException() {
-        super("An error occurred while assigning roles");
+    public RoleAssignmentException(String message) {
+        super(message);
     }
 }
