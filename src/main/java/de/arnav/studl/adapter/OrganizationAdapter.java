@@ -29,20 +29,4 @@ public class OrganizationAdapter implements DtoAdapter<Organization, Organizatio
         return organization;
     }
 
-    @Override
-    public Organization updateEntityFromUpdateDto(OrganizationUpdateDto updateDto, Organization organization) {
-        if(updateDto.getName() != null) {
-            organization.setName(updateDto.getName());
-        }
-        if(updateDto.getDomain() != null) {
-            organization.setDomain(updateDto.getDomain());
-        }
-        if(updateDto.getCodomains() != null) {
-            organization.setCodomains(updateDto.getCodomains());
-        }
-        if(updateDto.getTopLevelDomains() != null) {
-            organization.setTopLevelDomains(updateDto.getTopLevelDomains());
-        }
-        return organization;
-    }
 }

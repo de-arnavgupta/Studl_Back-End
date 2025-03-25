@@ -25,8 +25,4 @@ public class UserRoleAdapter implements DtoAdapter<UserRole, UserRoleResponseDto
         return userRole;
     }
 
-    @Override
-    public UserRole updateEntityFromUpdateDto(Void updateDto, UserRole entity) {
-        throw new UnsupportedOperationException("Update not supported for UserRole.");
-    }
 }

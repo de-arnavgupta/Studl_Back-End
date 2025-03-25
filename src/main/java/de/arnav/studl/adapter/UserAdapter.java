@@ -19,12 +19,7 @@ public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreate
         dto.setEmail(user.getEmail());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
-
-        if (user.getRoles() != null) {
-            dto.setRoles(user.getRoles().stream()
-                    .map(userRole -> userRole.getRole().name())
-                    .collect(Collectors.toList()));
-        }
+        dto.setRoles(user.getRoles());
         return dto;
     }
 
@@ -33,28 +28,10 @@ public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreate
         User user = new User();
         user.setName(createDto.getName());
         user.setEmail(createDto.getEmail());
-        user.setHashedPassword(hashPassword(createDto.getPassword()));
+        user.setHashedPassword(createDto.getPassword());
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         return user;
     }
 
-    @Override
-    public User updateEntityFromUpdateDto(UserUpdateDto updateDto, User user) {
-        if (updateDto.getName() != null) {
-            user.setName(updateDto.getName());
-        }
-        if (updateDto.getEmail() != null) {
-            user.setEmail(updateDto.getEmail());
-        }
-        if (updateDto.getNewPassword() != null && !updateDto.getNewPassword().isEmpty()) {
-            user.setPassword(hashPassword(updateDto.getNewPassword()));
-        }
-        user.setUpdatedAt(LocalDateTime.now());
-        return user;
-    }
-
-    private String hashPassword(String rawPassword) {
-        return rawPassword;
-    }
 }
