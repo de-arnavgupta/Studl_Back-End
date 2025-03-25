@@ -1,7 +1,6 @@
 package de.arnav.studl.facade.Implementation;
 
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
-import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.facade.UserFacade;
@@ -22,8 +21,8 @@ public class UserFacadeImpl implements UserFacade {
 
     @Transactional
     @Override
-    public void delete(UserDeleteDto userDeleteDto) {
-        userService.deleteUser(userDeleteDto);
+    public void delete(String email) {
+        userService.deleteUser(email);
     }
 
     @Override

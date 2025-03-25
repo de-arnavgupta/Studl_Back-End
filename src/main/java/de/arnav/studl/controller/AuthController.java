@@ -34,9 +34,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody UserCreateDto user){
-         authFacade.userRegister(user);
-         return ResponseEntity.ok("User registered successfully");
+    public ResponseEntity<Map<String,String>> registerUser(@RequestBody UserCreateDto user){
+         String token = authFacade.userRegister(user);
+         return ResponseEntity.ok(Map.of("token",token));
     }
 
 }

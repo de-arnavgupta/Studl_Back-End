@@ -4,12 +4,10 @@ import de.arnav.studl.adapter.OrganizationAdapter;
 import de.arnav.studl.adapter.UserAdapter;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserCreateDto;
-import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.exception.DuplicateUserException;
 import de.arnav.studl.exception.InvalidCredentialsException;
-import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.exception.UserNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
@@ -33,15 +31,13 @@ public class UserServiceImpl implements UserService {
     private final UserJpaRepository userJpaRepository;
     private final CustomLogicService customLogicService;
     private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final OrganizationAdapter organizationAdapter;
 
-    public UserServiceImpl(UserAdapter userAdapter, UserJpaRepository userJpaRepository, CustomLogicService customLogicService, PasswordEncoder passwordEncoder, JwtService jwtService, OrganizationAdapter organizationAdapter) {
+    public UserServiceImpl(UserAdapter userAdapter, UserJpaRepository userJpaRepository, CustomLogicService customLogicService, PasswordEncoder passwordEncoder, OrganizationAdapter organizationAdapter) {
         this.userAdapter = userAdapter;
         this.userJpaRepository = userJpaRepository;
         this.customLogicService = customLogicService;
         this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
         this.organizationAdapter = organizationAdapter;
     }
 
@@ -55,6 +51,9 @@ public class UserServiceImpl implements UserService {
         User user = userAdapter.fromCreateDto(userCreateDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<RoleType> roles = customLogicService.assignRoles(user.getUserEmail());
+        if (roles.isEmpty()) {
+            throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address. [Method: createUser]");
+        }
         user.setRoleType(roles);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -85,11 +84,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(UserDeleteDto userDeleteDto) {
-        String token = userDeleteDto.getJwtToken();
-        String email = jwtService.extractEmail(token);
+    public void deleteUser(String email) {
         if (email == null) {
-            throw new JwtAuthenticationException("Failed to extract email from token. Invalid or expired token. [Method: deleteUser]");
+            throw new InvalidCredentialsException("Invalid email address. [Method: deleteUser]");
         }
         userJpaRepository.deleteByUserEmail(email);
     }

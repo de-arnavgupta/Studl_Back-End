@@ -2,16 +2,14 @@ package de.arnav.studl.service;
 
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserCreateDto;
-import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
-import jakarta.transaction.Transactional;
 
 import java.util.List;
 
 public interface UserService {
 
-    void deleteUser(UserDeleteDto userDeleteDto);
+    void deleteUser(String email);
     UserResponseDto createUser(UserCreateDto userCreateDto);
     UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId);
     UserResponseDto removeAllRolesFromUser(Long userId);

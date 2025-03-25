@@ -1,6 +1,5 @@
 package de.arnav.studl.controller;
 
-import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.facade.UserFacade;
 import jakarta.validation.Valid;
@@ -11,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserFacade userFacade;
+    private final UserFacade userFacade;
 
     public UserController(UserFacade userFacade) {
         this.userFacade = userFacade;
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody UserDeleteDto request) {
-        userFacade.delete(request);
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<String> deleteUser(@PathVariable String email) {
+        userFacade.delete(email);
         return ResponseEntity.ok("✅ User deleted successfully");
     }
 
