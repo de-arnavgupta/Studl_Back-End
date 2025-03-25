@@ -46,10 +46,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
             String authHeader = request.getHeader("Authorization");
 
-            if(authHeader != null && authHeader.startsWith("Bearer ")){
-                token = authHeader.substring(7);
-                email=jwtService.extractEmail(token);
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
             }
+
+
+            token = authHeader.substring(7);
+            email=jwtService.extractEmail(token);
+
 
             // Check if token is blacklisted (User has logged out)
             if (authService.isTokenBlacklisted(token)) {
