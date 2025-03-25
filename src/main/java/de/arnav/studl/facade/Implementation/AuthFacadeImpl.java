@@ -4,6 +4,7 @@ import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
+import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.facade.AuthFacade;
 import de.arnav.studl.security.service.AuthService;
 import de.arnav.studl.security.service.JwtService;
@@ -28,7 +29,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public UserResponseDto userRegister(UserCreateDto userCreateDto) {
-        authService.verifyOrganization(userCreateDto.getEmail());
+        if(!authService.verifyOrganization(userCreateDto.getEmail())) {
+            throw new JwtAuthenticationException();
+        }
         UserResponseDto userResponseDto = userService.createUser(userCreateDto);
         jwtService.generateToken(userCreateDto.getEmail());
         return userResponseDto;
@@ -36,7 +39,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Override
     public String userLogin(String email,String password) {
-        authService.verifyOrganization(email);
+        if(!authService.verifyOrganization(email)) {
+            throw new JwtAuthenticationException();
+        }
         authService.authenticateUser(email, password);
        return jwtService.generateToken(email);
     }
