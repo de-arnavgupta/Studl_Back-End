@@ -4,6 +4,7 @@ import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
+import de.arnav.studl.exception.InvalidCredentialsException;
 import de.arnav.studl.exception.JwtAuthenticationException;
 import de.arnav.studl.facade.AuthFacade;
 import de.arnav.studl.security.service.AuthService;
@@ -30,7 +31,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public UserResponseDto userRegister(UserCreateDto userCreateDto) {
         if(!authService.verifyOrganization(userCreateDto.getEmail())) {
-            throw new JwtAuthenticationException();
+            throw new InvalidCredentialsException();
         }
         UserResponseDto userResponseDto = userService.createUser(userCreateDto);
         jwtService.generateToken(userCreateDto.getEmail());
@@ -40,10 +41,9 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public String userLogin(String email,String password) {
         if(!authService.verifyOrganization(email)) {
-            throw new JwtAuthenticationException();
+            throw new InvalidCredentialsException();
         }
-        authService.authenticateUser(email, password);
-       return jwtService.generateToken(email);
+       return  authService.authenticateUser(email, password);
     }
 
     @Override

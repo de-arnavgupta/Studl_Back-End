@@ -30,4 +30,10 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/")
+    public String getUserByEmail() {
+
+        return "Hello World";
+    }
+
 }
