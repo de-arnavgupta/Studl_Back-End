@@ -84,17 +84,10 @@ public class UserServiceImpl implements UserService {
         return userAdapter.toResponseDto(savedUser);
     }
 
-    @Transactional
     @Override
     public void deleteUser(UserDeleteDto userDeleteDto) {
         String token = userDeleteDto.getJwtToken();
-        if (token == null || token.isBlank()) {
-            throw new JwtAuthenticationException();
-        }
         String email = jwtService.extractEmail(token);
-        if (email == null) {
-            throw new JwtAuthenticationException();
-        }
         userJpaRepository.deleteByUserEmail(email);
     }
 

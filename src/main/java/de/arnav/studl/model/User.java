@@ -12,29 +12,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<RoleType> roleType;
-
     private String userName;
-
     private String userEmail;
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
-
     private String organisationRollNo;
-
     private Timestamp createdAt;
-
     private Timestamp updatedAt;
-
     private String provider;
-
     private String providerId;
-
     private String password;
 
     //Default

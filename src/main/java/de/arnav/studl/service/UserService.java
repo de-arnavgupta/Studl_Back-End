@@ -5,6 +5,8 @@ import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserDeleteDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 
 public interface UserService {
