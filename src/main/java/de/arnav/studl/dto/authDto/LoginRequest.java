@@ -1,4 +1,4 @@
-package de.arnav.studl.dto;
+package de.arnav.studl.dto.authDto;
 
 public class LoginRequest {
     private String email;

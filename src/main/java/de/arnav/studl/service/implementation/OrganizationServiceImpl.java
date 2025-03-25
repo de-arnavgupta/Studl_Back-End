@@ -32,7 +32,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (organizationJpaRepository.existsByDomain(organizationCreateDto.getDomain())) {
             throw new DuplicateOrganizationException();
         }
-        Organization organization = organizationAdapter.fromCreateDto();
+        Organization organization = organizationAdapter.fromCreateDto(organizationCreateDto);
         Organization savedOrganization = organizationJpaRepository.save(organization);
         return organizationAdapter.toResponseDto(savedOrganization);
     }

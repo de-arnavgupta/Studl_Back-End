@@ -1,5 +1,6 @@
 package de.arnav.studl.dto.userDto;
 
+import de.arnav.studl.model.RoleType;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -14,7 +15,7 @@ public class UserResponseDto {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private Long organizationId;
-    private Set<String> roles;
+    private Set<RoleType> roles;
 
     public Timestamp getCreatedAt() {
         return createdAt;
@@ -64,11 +65,11 @@ public class UserResponseDto {
         this.organizationId = organizationId;
     }
 
-    public Set<String> getRoles() {
+    public Set<RoleType> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<String> roles) {
+    public void setRoles(Set<RoleType> roles) {
         this.roles = roles;
     }
 }

@@ -1,6 +1,6 @@
 package de.arnav.studl.controller;
 
-import de.arnav.studl.dto.LoginRequest;
+import de.arnav.studl.dto.authDto.LoginRequest;
 import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.facade.AuthFacade;
 import jakarta.servlet.http.HttpServletRequest;

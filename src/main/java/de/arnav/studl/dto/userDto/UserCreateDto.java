@@ -2,8 +2,6 @@ package de.arnav.studl.dto.userDto;
 
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 public class UserCreateDto {
 
@@ -11,7 +9,6 @@ public class UserCreateDto {
     private String name;
     private String email;
     private String password;
-    private Set<String> roles;
 
     public Long getUserId() {
         return userId;
@@ -43,14 +40,6 @@ public class UserCreateDto {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Set<String> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<String> roles) {
-        this.roles = roles;
     }
 
 }
