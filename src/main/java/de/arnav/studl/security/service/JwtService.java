@@ -1,6 +1,7 @@
 package de.arnav.studl.security.service;
 
 import de.arnav.studl.exception.JwtAuthenticationException;
+import de.arnav.studl.exception.UserNotFoundException;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
 import de.arnav.studl.repository.TokenBlacklistJpaRepository;
@@ -40,7 +41,7 @@ public class JwtService {
     //generate token and set claims
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
-        User user=userJpaRepository.findByUserEmail(email).orElseThrow(()-> new JwtAuthenticationException());
+        User user=userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found. [Method: findUserByEmail]"));
         Set<RoleType> roles=user.getRoleType();
 
         List<String> role=roles.stream().map(RoleType :: name).collect(Collectors.toList());
@@ -77,13 +78,12 @@ public class JwtService {
     //generic method to extract claims from the database
     private Claims extractAllClaims(String token) {
         try {
-            Claims claims = Jwts.parser().verifyWith(getKey())
+            System.err.println(token);
+            return Jwts.parser().verifyWith(getKey())
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
-            return claims;
         } catch (Exception e) {
-            System.err.println();
             throw new JwtAuthenticationException("Error in extracting claims");
         }
     }
@@ -95,8 +95,7 @@ public class JwtService {
             final String email=extractEmail(token);
             return (email.equals(user.getUserEmail()) && !isTokenExpired(token));
         } catch(Exception e){
-            System.err.println("Error in validateToken");
-            throw new JwtAuthenticationException();
+            throw new JwtAuthenticationException("Error in validateToken");
         }
 
     }

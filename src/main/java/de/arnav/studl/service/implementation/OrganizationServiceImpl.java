@@ -30,7 +30,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
         if (organizationJpaRepository.existsByDomainName(organizationCreateDto.getDomain())) {
-            throw new DuplicateOrganizationException();
+            throw new DuplicateOrganizationException("Organization with domain " + organizationCreateDto.getDomain() + " already exists. (createOrganization)");
         }
         Organization organization = organizationAdapter.fromCreateDto(organizationCreateDto);
         Organization savedOrganization = organizationJpaRepository.save(organization);
@@ -42,10 +42,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
 
         if (organizationId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Organization ID cannot be null. (updateOrganization)");
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException());
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (updateOrganization)"));
 
         if(organizationUpdateDto.getName() != null) {
             organization.setOrganizationName(organizationUpdateDto.getName());
@@ -67,10 +67,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public void deleteOrganization(Long organizationId) {
         if (organizationId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Organization ID cannot be null. (deleteOrganization)");
         }
         if (!organizationJpaRepository.existsById(organizationId)) {
-            throw new OrganizationNotFoundException();
+            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (deleteOrganization)");
         }
         organizationJpaRepository.deleteById(organizationId);
     }
@@ -78,10 +78,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public Integer countUsersByOrganizationId(Long organizationId) {
         if (organizationId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Organization ID cannot be null. (countUsersByOrganizationId)");
         }
         if (!organizationJpaRepository.existsById(organizationId)) {
-            throw new OrganizationNotFoundException();
+            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)");
         }
         return organizationJpaRepository.countUsersByOrganizationId(organizationId);
     }
@@ -89,10 +89,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto findOrganizationById(Long organizationId) {
         if (organizationId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Organization ID cannot be null. (findOrganizationById)");
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException());
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)"));
         return organizationAdapter.toResponseDto(organization);
     }
 
@@ -109,7 +109,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<OrganizationResponseDto> findOrganizationsByName(String name) {
         if (name == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Organization name cannot be null. (findOrganizationsByName)");
         }
         List<Organization> organizations = organizationJpaRepository.findByOrganizationName(name);
         List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();

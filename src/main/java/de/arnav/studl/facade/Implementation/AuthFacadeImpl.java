@@ -31,7 +31,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public UserResponseDto userRegister(UserCreateDto userCreateDto) {
         if(!authService.verifyOrganization(userCreateDto.getEmail())) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid email or password. [Method: userRegister]");
         }
         UserResponseDto userResponseDto = userService.createUser(userCreateDto);
         jwtService.generateToken(userCreateDto.getEmail());
@@ -41,7 +41,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public String userLogin(String email,String password) {
         if(!authService.verifyOrganization(email)) {
-            throw new InvalidCredentialsException();
+            throw new InvalidCredentialsException("Invalid email or password. [Method: userLogin]");
         }
        return  authService.authenticateUser(email, password);
     }

@@ -33,7 +33,7 @@ public class CustomLogicService {
             }
 
         } catch (Exception e) {
-            throw new RoleAssignmentException();
+            throw new RoleAssignmentException("Role assignment failed. [Method: assignRoles]");
         }
 
         return roles;

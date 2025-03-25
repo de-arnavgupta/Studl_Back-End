@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         if (userJpaRepository.existsByUserEmail(userCreateDto.getEmail())) {
-            throw new DuplicateUserException();
+            throw new DuplicateUserException("User with email " + userCreateDto.getEmail() + " already exists. [Method: createUser]");
         }
         User user = userAdapter.fromCreateDto(userCreateDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -64,10 +64,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("User ID cannot be null. [Method: updateUser]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: updateUser]"));
         if(userUpdateDto.getName() != null) {
             user.setUserName(userUpdateDto.getName());
         }
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
         }
         if(userUpdateDto.getNewPassword() != null && userUpdateDto.getOldPassword() != null) {
             if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
-                throw new InvalidCredentialsException();
+                throw new InvalidCredentialsException("Incorrect old password. [Method: updateUser]");
             }
             user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
         }
@@ -88,6 +88,9 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UserDeleteDto userDeleteDto) {
         String token = userDeleteDto.getJwtToken();
         String email = jwtService.extractEmail(token);
+        if (email == null) {
+            throw new JwtAuthenticationException("Failed to extract email from token. Invalid or expired token. [Method: deleteUser]");
+        }
         userJpaRepository.deleteByUserEmail(email);
     }
 
@@ -95,10 +98,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto removeAllRolesFromUser(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("User ID cannot be null. [Method: removeAllRolesFromUser]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: removeAllRolesFromUser]"));
         user.getRoleType().clear();
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -107,29 +110,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto findUserById(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("User ID cannot be null. [Method: findUserById]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: findUserById]"));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public UserResponseDto findUserByEmail(String email) {
         if (email == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Email cannot be null. [Method: findUserByEmail]");
         }
-        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException());
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found. [Method: findUserByEmail]"));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public List<UserResponseDto> findUsersByUsername(String username) {
         if (username == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Username cannot be null. [Method: findUsersByUsername]");
         }
         List<User> users = userJpaRepository.findByUserName(username);
         List<UserResponseDto> userResponseDtos = new ArrayList<>();
@@ -152,10 +152,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public OrganizationResponseDto findOrganizationByUserId(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("User ID cannot be null. [Method: findOrganizationByUserId]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: findOrganizationByUserId]"));
         Organization organization = user.getOrganization();
         return organizationAdapter.toResponseDto(organization);
     }
