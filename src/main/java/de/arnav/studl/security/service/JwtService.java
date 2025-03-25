@@ -78,7 +78,6 @@ public class JwtService {
     //generic method to extract claims from the database
     private Claims extractAllClaims(String token) {
         try {
-            System.err.println(token);
             return Jwts.parser().verifyWith(getKey())
                     .build()
                     .parseSignedClaims(token)
