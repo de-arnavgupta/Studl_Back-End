@@ -16,7 +16,8 @@ public class User {
     @ElementCollection
     @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
     @Enumerated(EnumType.STRING)
-    private Set<RoleType> roleType = new HashSet<>();
+
+    private Set<RoleType> roleType;
 
     private String userName;
 
@@ -51,6 +52,7 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.password = password;
+        this.roleType = new HashSet<>();
     }
 
     //Getters and Setters

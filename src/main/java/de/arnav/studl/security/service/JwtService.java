@@ -20,6 +20,9 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
 public class JwtService {
     private final String secretKey;
@@ -45,7 +48,7 @@ public class JwtService {
                 .subject(email)
                 .claim("roles",role)
                 .issuedAt(new Date(System.currentTimeMillis()))//set issue time
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30*1000L))
                 .signWith(getKey())
                 .compact();
 
@@ -75,9 +78,11 @@ public class JwtService {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (Exception e) {
+            System.err.println("Error in extracting claims");
             throw new JwtAuthenticationException();
         }
     }
+
 
 
     public boolean validateToken(String token, User user) {
@@ -85,6 +90,7 @@ public class JwtService {
             final String email=extractEmail(token);
             return (email.equals(user.getUserEmail()) && !isTokenExpired(token));
         } catch(Exception e){
+            System.err.println("Error in validateToken");
             throw new JwtAuthenticationException();
         }
 

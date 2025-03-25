@@ -62,6 +62,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             // Check if token is blacklisted (User has logged out)
             if (jwtService.isTokenBlacklisted(token)) {
+                System.err.println("Error in blacklist filter");
                 throw new JwtAuthenticationException();
             }
 
@@ -71,6 +72,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
 
                 if(!jwtService.validateToken(token,user)){
+                    System.err.println("Error in validateToken in filter");
                     throw new JwtAuthenticationException();
                 }
 
@@ -79,6 +81,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         } catch(JwtException e){
+            System.err.println("Error in filter");
             throw new JwtAuthenticationException();
         }
 
