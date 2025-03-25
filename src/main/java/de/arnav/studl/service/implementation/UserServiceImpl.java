@@ -98,7 +98,6 @@ public class UserServiceImpl implements UserService {
         userJpaRepository.deleteByEmail(email);
     }
 
-
     @Transactional
     @Override
     public UserResponseDto removeAllRolesFromUser(Long userId) {

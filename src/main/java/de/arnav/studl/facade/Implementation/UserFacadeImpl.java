@@ -29,11 +29,6 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserResponseDto removeRole(Long userRoleId, RoleType roleType) {
-        return userService.removeRoleFromUser(userRoleId, roleType);
-    }
-
-    @Override
     public UserResponseDto removeAllRoles(Long userRoleId) {
         return userService.removeAllRolesFromUser(userRoleId);
     }
@@ -63,8 +58,4 @@ public class UserFacadeImpl implements UserFacade {
         return userService.findOrganizationByUserId(userId);
     }
 
-    @Override
-    public Boolean hasRole(Long userId, RoleType roleType) {
-        return userService.userHasRole(userId, roleType);
-    }
 }
