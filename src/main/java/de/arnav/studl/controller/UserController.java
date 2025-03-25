@@ -22,7 +22,7 @@ public class UserController {
         return ResponseEntity.ok("✅ User deleted successfully");
     }
 
-    @GetMapping("fetchUser/{email}")
+    @GetMapping("fetchBy/{email}")
     public ResponseEntity<UserResponseDto> getUserByEmail(@PathVariable @Valid String email) {
         UserResponseDto user = userFacade.findByEmail(email);
         return ResponseEntity.ok(user);
