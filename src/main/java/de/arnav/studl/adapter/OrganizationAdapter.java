@@ -2,12 +2,13 @@ package de.arnav.studl.adapter;
 
 import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationSummaryDto;
 import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
 import de.arnav.studl.model.Organization;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrganizationAdapter implements DtoAdapter<Organization, OrganizationResponseDto, OrganizationCreateDto, OrganizationUpdateDto> {
+public class OrganizationAdapter implements DtoAdapter<Organization, OrganizationResponseDto, OrganizationCreateDto, OrganizationSummaryDto> {
 
     @Override
     public OrganizationResponseDto toResponseDto(Organization organization) {
@@ -17,6 +18,14 @@ public class OrganizationAdapter implements DtoAdapter<Organization, Organizatio
         dto.setDomain(organization.getDomainName());
         dto.setCodomains(organization.getSubDomainNames());
         dto.setTopLevelDomains(organization.getTld());
+        return dto;
+    }
+
+    @Override
+    public OrganizationSummaryDto toSummaryDto(Organization organization) {
+        OrganizationSummaryDto dto = new OrganizationSummaryDto();
+        dto.setName(organization.getOrganizationName());
+        dto.setDomain(organization.getDomainName());
         return dto;
     }
 
