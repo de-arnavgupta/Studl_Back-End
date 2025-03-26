@@ -18,6 +18,7 @@ public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreate
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setRoles(user.getRoleType());
+        dto.setOrganizationId(user.getOrganization());
         return dto;
     }
 
