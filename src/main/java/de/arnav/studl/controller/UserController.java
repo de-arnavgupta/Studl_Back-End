@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -23,16 +25,22 @@ public class UserController {
         return ResponseEntity.ok("✅ User deleted successfully");
     }
 
-    @GetMapping("fetchBy/{email}")
+    @GetMapping("/fetchBy/{email}")
     public ResponseEntity<UserResponseDto> getUserByEmail(@Valid @PathVariable String email) {
         UserResponseDto user = userFacade.findByEmail(email);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("fetchOrganizationBy/{email}")
+    @GetMapping("/fetchOrganizationBy/{email}")
     public ResponseEntity<OrganizationResponseDto> getOrganizationByUserEmail(@Valid @PathVariable String email) {
         OrganizationResponseDto organization = userFacade.findOrganizationByEmail(email);
         return ResponseEntity.ok(organization);
+    }
+
+    @GetMapping("/fetchAll")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userFacade.findAll();
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/")
