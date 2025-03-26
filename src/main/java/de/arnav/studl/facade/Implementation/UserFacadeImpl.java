@@ -56,8 +56,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public OrganizationResponseDto findOrganizationById(Long userId) {
-        return userService.findOrganizationByUserId(userId);
+    public OrganizationResponseDto findOrganizationByEmail(String email) {
+        return userService.findOrganizationByUserEmail(email);
     }
 
 }

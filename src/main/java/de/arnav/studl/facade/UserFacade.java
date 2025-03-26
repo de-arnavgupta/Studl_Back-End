@@ -17,6 +17,6 @@ public interface UserFacade {
     UserResponseDto findByEmail(String email);
     List<UserResponseDto> findByUsername(String username);
     List<UserResponseDto> findAll();
-    OrganizationResponseDto findOrganizationById(Long userId);
+    OrganizationResponseDto findOrganizationByEmail(String email);
 
 }

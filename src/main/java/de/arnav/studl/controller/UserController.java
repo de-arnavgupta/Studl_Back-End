@@ -1,5 +1,6 @@
 package de.arnav.studl.controller;
 
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.facade.UserFacade;
 import jakarta.validation.Valid;
@@ -26,6 +27,12 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUserByEmail(@Valid @PathVariable String email) {
         UserResponseDto user = userFacade.findByEmail(email);
         return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("fetchOrganizationBy/{email}")
+    public ResponseEntity<OrganizationResponseDto> getOrganizationByUserEmail(@Valid @PathVariable String email) {
+        OrganizationResponseDto organization = userFacade.findOrganizationByEmail(email);
+        return ResponseEntity.ok(organization);
     }
 
     @GetMapping("/")

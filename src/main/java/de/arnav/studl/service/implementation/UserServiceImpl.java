@@ -16,7 +16,6 @@ import de.arnav.studl.model.User;
 import de.arnav.studl.repository.OrganizationJpaRepository;
 import de.arnav.studl.repository.UserJpaRepository;
 import de.arnav.studl.security.service.CustomLogicService;
-import de.arnav.studl.security.service.JwtService;
 import de.arnav.studl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -167,12 +166,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public OrganizationResponseDto findOrganizationByUserId(Long userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null. [Method: findOrganizationByUserId]");
+    public OrganizationResponseDto findOrganizationByUserEmail(String email) {
+        if (email == null) {
+            throw new IllegalArgumentException("Email cannot be null. [Method: findOrganizationByUserId]");
         }
-        User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: findOrganizationByUserId]"));
+        User user = userJpaRepository.findByUserEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found. [Method: findOrganizationByUserId]"));
         Organization organization = user.getOrganization();
         return organizationAdapter.toResponseDto(organization);
     }
