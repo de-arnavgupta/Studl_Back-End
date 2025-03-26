@@ -8,10 +8,12 @@ import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.exception.DuplicateUserException;
 import de.arnav.studl.exception.InvalidCredentialsException;
+import de.arnav.studl.exception.OrganizationNotFoundException;
 import de.arnav.studl.exception.UserNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.RoleType;
 import de.arnav.studl.model.User;
+import de.arnav.studl.repository.OrganizationJpaRepository;
 import de.arnav.studl.repository.UserJpaRepository;
 import de.arnav.studl.security.service.CustomLogicService;
 import de.arnav.studl.security.service.JwtService;
@@ -31,13 +33,15 @@ public class UserServiceImpl implements UserService {
     private final UserJpaRepository userJpaRepository;
     private final CustomLogicService customLogicService;
     private final PasswordEncoder passwordEncoder;
+    private final OrganizationJpaRepository organizationJpaRepository;
     private final OrganizationAdapter organizationAdapter;
 
-    public UserServiceImpl(UserAdapter userAdapter, UserJpaRepository userJpaRepository, CustomLogicService customLogicService, PasswordEncoder passwordEncoder, OrganizationAdapter organizationAdapter) {
+    public UserServiceImpl(UserAdapter userAdapter, UserJpaRepository userJpaRepository, CustomLogicService customLogicService, PasswordEncoder passwordEncoder, OrganizationJpaRepository organizationJpaRepository, OrganizationAdapter organizationAdapter) {
         this.userAdapter = userAdapter;
         this.userJpaRepository = userJpaRepository;
         this.customLogicService = customLogicService;
         this.passwordEncoder = passwordEncoder;
+        this.organizationJpaRepository = organizationJpaRepository;
         this.organizationAdapter = organizationAdapter;
     }
 
@@ -55,8 +59,24 @@ public class UserServiceImpl implements UserService {
             throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address. [Method: createUser]");
         }
         user.setRoleType(roles);
+        String domain = getDomainFromEmail(user.getUserEmail());
+        Organization organization = organizationJpaRepository.findByDomainName(domain)
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with domain " + domain + " not found. [Method: createUser]"));
+        user.setOrganization(organization);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
+    }
+
+    private String getDomainFromEmail(String email) {
+
+        String domain = email.substring(email.indexOf("@") + 1); // Extracts domain (sst.scaler.com)
+        String[] parts = domain.split("\\.");
+
+        if (parts.length >= 2) {
+            return parts[parts.length - 2]; // Extract the second-last part (scaler)
+        } else {
+            return domain; //if domain is not structured as expected
+        }
     }
 
     @Transactional

@@ -53,7 +53,6 @@ public class AuthService {
     //Verify if an email belongs to a valid organization
     public boolean verifyOrganization(String email){
         String domain=getDomainFromEmail(email);
-
         return organizationJpaRepository.findByDomainName(domain).isPresent();
     }
 
