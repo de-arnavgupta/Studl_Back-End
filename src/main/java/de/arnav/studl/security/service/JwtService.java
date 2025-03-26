@@ -30,9 +30,11 @@ public class JwtService {
     private final String secretKey;
     private final UserJpaRepository userJpaRepository;
     private final TokenBlacklistJpaRepository tokenBlacklistJpaRepository;
+    private final int expirationTime;
 
-    public JwtService(@Value("${jwt.secret}") String secretKey,UserJpaRepository userJpaRespository,TokenBlacklistJpaRepository tokenBlacklistJpaRepository) {
+    public JwtService(@Value("${jwt.secret}") String secretKey,@Value("${jwt.expiration}") int expirationTime,UserJpaRepository userJpaRespository,TokenBlacklistJpaRepository tokenBlacklistJpaRepository) {
         this.secretKey = secretKey;
+        this.expirationTime = expirationTime;
         this.userJpaRepository=userJpaRespository;
         this.tokenBlacklistJpaRepository=tokenBlacklistJpaRepository;
 
@@ -52,7 +54,7 @@ public class JwtService {
                 .add(claims)
                 .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))//set issue time
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30*1000L))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .and()
                 .signWith(getKey())
                 .compact();
