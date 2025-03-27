@@ -4,16 +4,47 @@ import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserSummaryDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
+import de.arnav.studl.exception.InvalidCredentialsException;
+import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreateDto, UserSummaryDto> {
+public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreateDto, UserUpdateDto, UserSummaryDto> {
 
     private final OrganizationAdapter organizationAdapter;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserAdapter(OrganizationAdapter organizationAdapter) {
+    public UserAdapter(OrganizationAdapter organizationAdapter, PasswordEncoder passwordEncoder) {
         this.organizationAdapter = organizationAdapter;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Override
+    public User fromCreateDto(UserCreateDto createDto) {
+        User user = new User();
+        user.setUserName(createDto.getName());
+        user.setUserEmail(createDto.getEmail());
+        user.setPassword(createDto.getPassword());
+        return user;
+    }
+
+    @Override
+    public User fromUpdateDto(UserUpdateDto userUpdateDto, User user) {
+        if(userUpdateDto.getName() != null) {
+            user.setUserName(userUpdateDto.getName());
+        }
+        if(userUpdateDto.getEmail() != null) {
+            user.setUserEmail(userUpdateDto.getEmail());
+        }
+        if(userUpdateDto.getNewPassword() != null && userUpdateDto.getOldPassword() != null) {
+            if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
+                throw new InvalidCredentialsException("Incorrect old password. [Method: updateUser]");
+            }
+            user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
+        }
+        return user;
     }
 
     @Override
@@ -36,15 +67,6 @@ public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreate
         dto.setEmail(user.getUserEmail());
         dto.setRoles(user.getRoleType());
         return dto;
-    }
-
-    @Override
-    public User fromCreateDto(UserCreateDto createDto) {
-        User user = new User();
-        user.setUserName(createDto.getName());
-        user.setUserEmail(createDto.getEmail());
-        user.setPassword(createDto.getPassword());
-        return user;
     }
 
 }

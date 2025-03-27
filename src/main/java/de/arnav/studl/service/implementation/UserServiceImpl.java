@@ -86,18 +86,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: updateUser]"));
-        if(userUpdateDto.getName() != null) {
-            user.setUserName(userUpdateDto.getName());
-        }
-        if(userUpdateDto.getEmail() != null) {
-            user.setUserEmail(userUpdateDto.getEmail());
-        }
-        if(userUpdateDto.getNewPassword() != null && userUpdateDto.getOldPassword() != null) {
-            if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
-                throw new InvalidCredentialsException("Incorrect old password. [Method: updateUser]");
-            }
-            user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
-        }
+        user = userAdapter.fromUpdateDto(userUpdateDto, user);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
     }

@@ -49,19 +49,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
                 .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (updateOrganization)"));
-
-        if(organizationUpdateDto.getName() != null) {
-            organization.setOrganizationName(organizationUpdateDto.getName());
-        }
-        if(organizationUpdateDto.getDomain() != null) {
-            organization.setDomainName(organizationUpdateDto.getDomain());
-        }
-        if(organizationUpdateDto.getCodomains() != null) {
-            organization.setSubDomainNames(organizationUpdateDto.getCodomains());
-        }
-        if(organizationUpdateDto.getTopLevelDomains() != null) {
-            organization.setTld(organizationUpdateDto.getTopLevelDomains());
-        }
+        organization = organizationAdapter.fromUpdateDto(organizationUpdateDto, organization);
         Organization savedOrganization = organizationJpaRepository.save(organization);
         return organizationAdapter.toResponseDto(savedOrganization);
     }
