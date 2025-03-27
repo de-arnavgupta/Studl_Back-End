@@ -8,6 +8,7 @@ import de.arnav.studl.exception.DuplicateOrganizationException;
 import de.arnav.studl.exception.OrganizationNotFoundException;
 import de.arnav.studl.model.Organization;
 import de.arnav.studl.repository.OrganizationJpaRepository;
+import de.arnav.studl.repository.UserJpaRepository;
 import de.arnav.studl.service.OrganizationService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -20,10 +21,12 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private final OrganizationAdapter organizationAdapter;
     private final OrganizationJpaRepository organizationJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
-    public OrganizationServiceImpl(OrganizationAdapter organizationAdapter, OrganizationJpaRepository organizationJpaRepository) {
+    public OrganizationServiceImpl(OrganizationAdapter organizationAdapter, OrganizationJpaRepository organizationJpaRepository, UserJpaRepository userJpaRepository) {
         this.organizationAdapter = organizationAdapter;
         this.organizationJpaRepository = organizationJpaRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
     @Transactional
@@ -69,9 +72,9 @@ public class OrganizationServiceImpl implements OrganizationService {
         if (organizationId == null) {
             throw new IllegalArgumentException("Organization ID cannot be null. (deleteOrganization)");
         }
-        if (!organizationJpaRepository.existsById(organizationId)) {
-            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (deleteOrganization)");
-        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (deleteOrganization)"));
+        userJpaRepository.deleteAllByOrganization(organization);
         organizationJpaRepository.deleteById(organizationId);
     }
 

@@ -18,6 +18,6 @@ public interface UserJpaRepository extends JpaRepository<User, Long> {
     List<User> findAllByOrganization(Organization organization);
     void deleteByUserEmail(String userEmail);
     List<User> findByUserName(String username);
-
     Set<RoleType> findRolesByUserEmail(@Param("email") String email);
+    void deleteAllByOrganization(Organization organization);
 }

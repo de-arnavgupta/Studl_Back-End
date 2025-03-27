@@ -1,6 +1,7 @@
 package de.arnav.studl.dto.organizationDto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Set;
 
@@ -11,6 +12,7 @@ public class OrganizationCreateDto {
     @NotBlank(message = "Domain name cannot be blank")
     private String domain;
     private Set<String> codomains;
+    @NotNull(message = "Top Level Domains (TLDs) cannot be blank")
     private Set<String> topLevelDomains;
 
     public Set<String> getTopLevelDomains() {
