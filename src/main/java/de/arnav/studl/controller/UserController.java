@@ -2,6 +2,7 @@ package de.arnav.studl.controller;
 
 import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
+import de.arnav.studl.dto.userDto.UserUpdateDto;
 import de.arnav.studl.facade.UserFacade;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,18 @@ public class UserController {
 
     public UserController(UserFacade userFacade) {
         this.userFacade = userFacade;
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userUpdateDto, @PathVariable Long id){
+        UserResponseDto userResponseDto = userFacade.update(userUpdateDto, id, true);
+        return ResponseEntity.ok(userResponseDto);
+    }
+
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UserResponseDto> updateUserPartially(@Valid @RequestBody UserUpdateDto userUpdateDto, @PathVariable Long id){
+        UserResponseDto userResponseDto = userFacade.update(userUpdateDto, id, false);
+        return ResponseEntity.ok(userResponseDto);
     }
 
     @DeleteMapping("/delete/{email}")
