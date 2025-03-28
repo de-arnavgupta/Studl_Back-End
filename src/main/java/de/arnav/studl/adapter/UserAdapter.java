@@ -4,8 +4,6 @@ import de.arnav.studl.dto.userDto.UserCreateDto;
 import de.arnav.studl.dto.userDto.UserResponseDto;
 import de.arnav.studl.dto.userDto.UserSummaryDto;
 import de.arnav.studl.dto.userDto.UserUpdateDto;
-import de.arnav.studl.exception.InvalidCredentialsException;
-import de.arnav.studl.model.Organization;
 import de.arnav.studl.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -35,13 +33,7 @@ public class UserAdapter implements DtoAdapter<User, UserResponseDto, UserCreate
         if(userUpdateDto.getName() != null) {
             user.setUserName(userUpdateDto.getName());
         }
-        if(userUpdateDto.getEmail() != null) {
-            user.setUserEmail(userUpdateDto.getEmail());
-        }
-        if(userUpdateDto.getNewPassword() != null && userUpdateDto.getOldPassword() != null) {
-            if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
-                throw new InvalidCredentialsException("Incorrect old password. [Method: updateUser]");
-            }
+        if(userUpdateDto.getNewPassword() != null) {
             user.setPassword(passwordEncoder.encode(userUpdateDto.getNewPassword()));
         }
         return user;

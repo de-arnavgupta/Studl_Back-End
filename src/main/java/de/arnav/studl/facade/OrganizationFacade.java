@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface OrganizationFacade {
     OrganizationResponseDto organizationRegister (OrganizationCreateDto organizationCreateDto);
-    OrganizationResponseDto update(OrganizationUpdateDto organizationUpdateDto, Long organizationId);
+    OrganizationResponseDto update(OrganizationUpdateDto organizationUpdateDto, Long organizationId, Boolean isPut);
     void delete(Long organizationId);
     Integer countUsers(Long organizationId);
     OrganizationResponseDto findById(Long organizationId);

@@ -33,22 +33,37 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
         if (organizationJpaRepository.existsByDomainName(organizationCreateDto.getDomain())) {
-            throw new DuplicateOrganizationException("Organization with domain " + organizationCreateDto.getDomain() + " already exists.)");
+            throw new DuplicateOrganizationException("Organization with domain " + organizationCreateDto.getDomain() + " already exists. (createOrganization)");
         }
         Organization organization = organizationAdapter.fromCreateDto(organizationCreateDto);
         Organization savedOrganization = organizationJpaRepository.save(organization);
         return organizationAdapter.toResponseDto(savedOrganization);
     }
 
+    // IF USING PUT OPERATION, PLS ENSURE ALL CREDENTIALS ARE MET, ELSE WE WILL FACE NULL VALUES AND EXCEPTIONS ACCORDINGLY.
     @Transactional
     @Override
-    public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
+    public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId, Boolean isPut) {
 
         if (organizationId == null) {
-            throw new IllegalArgumentException("Organization ID cannot be null.");
+            throw new IllegalArgumentException("Organization ID cannot be null. (updateOrganization)");
+        }
+        if (organizationUpdateDto.getDomain() != null) {
+            throw new IllegalArgumentException("Organization domain cannot be updated. (PUT: updateOrganization)");
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found."));
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (updateOrganization)"));
+        if (isPut) {
+            if (organizationUpdateDto.getName() == null || organizationUpdateDto.getName().isEmpty()) {
+                throw new IllegalArgumentException("Organization name cannot be blank. (PUT: updateOrganization)");
+            }
+            if (organizationUpdateDto.getTopLevelDomains() == null || organizationUpdateDto.getTopLevelDomains().isEmpty()) {
+                throw new IllegalArgumentException("Organization top level domains cannot be null. (PUT: updateOrganization)");
+            }
+            organization.setOrganizationName(null);
+            organization.setSubDomainNames(null);
+            organization.setTld(null);
+        }
         organization = organizationAdapter.fromUpdateDto(organizationUpdateDto, organization);
         Organization savedOrganization = organizationJpaRepository.save(organization);
         return organizationAdapter.toResponseDto(savedOrganization);
@@ -61,7 +76,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new IllegalArgumentException("Organization ID cannot be null. (deleteOrganization)");
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found."));
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (deleteOrganization)"));
         userJpaRepository.deleteAllByOrganization(organization);
         organizationJpaRepository.deleteById(organizationId);
     }
@@ -72,7 +87,7 @@ public class OrganizationServiceImpl implements OrganizationService {
             throw new IllegalArgumentException("Organization ID cannot be null. (countUsersByOrganizationId)");
         }
         if (!organizationJpaRepository.existsById(organizationId)) {
-            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found.");
+            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)");
         }
         return organizationJpaRepository.countUsersByOrganizationId(organizationId);
     }
@@ -80,10 +95,10 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public OrganizationResponseDto findOrganizationById(Long organizationId) {
         if (organizationId == null) {
-            throw new IllegalArgumentException("Organization ID cannot be null.");
+            throw new IllegalArgumentException("Organization ID cannot be null. (findOrganizationById)");
         }
         Organization organization = organizationJpaRepository.findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found."));
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)"));
         return organizationAdapter.toResponseDto(organization);
     }
 
@@ -100,7 +115,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<OrganizationResponseDto> findOrganizationsByName(String name) {
         if (name == null) {
-            throw new IllegalArgumentException("Organization name cannot be null.");
+            throw new IllegalArgumentException("Organization name cannot be null. (findOrganizationsByName)");
         }
         List<Organization> organizations = organizationJpaRepository.findByOrganizationName(name);
         List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();
@@ -112,8 +127,8 @@ public class OrganizationServiceImpl implements OrganizationService {
 }
 
 /*
-* Questions to ask yourself next time b4 jumping to code (thought process):
-* What are my DTOs and how will they flow between the layers?
-* What do my adapters do?
-* Which facade will use which methods.
-* */
+ * Questions to ask yourself next time b4 jumping to code (thought process):
+ * What are my DTOs and how will they flow between the layers?
+ * What do my adapters do?
+ * Which facade will use which methods.
+ * */

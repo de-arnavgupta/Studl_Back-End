@@ -49,18 +49,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         if (userJpaRepository.existsByUserEmail(userCreateDto.getEmail())) {
-            throw new DuplicateUserException("User with email " + userCreateDto.getEmail() + " already exists.");
+            throw new DuplicateUserException("User with email " + userCreateDto.getEmail() + " already exists. [Method: createUser]");
         }
         User user = userAdapter.fromCreateDto(userCreateDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<RoleType> roles = customLogicService.assignRoles(user.getUserEmail());
         if (roles.isEmpty()) {
-            throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address.");
+            throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address. [Method: createUser]");
         }
         user.setRoleType(roles);
         String domain = getDomainFromEmail(user.getUserEmail());
         Organization organization = organizationJpaRepository.findByDomainName(domain)
-                .orElseThrow(() -> new OrganizationNotFoundException("Organization with domain " + domain + " not found."));
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with domain " + domain + " not found. [Method: createUser]"));
         user.setOrganization(organization);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -80,12 +80,30 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
+    public UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId, Boolean isPut) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null.");
+            throw new IllegalArgumentException("User ID cannot be null. [Method: updateUser]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: updateUser]"));
+        if(userUpdateDto.getNewPassword() != null) {
+            if (userUpdateDto.getOldPassword() == null) {
+                throw new InvalidCredentialsException("Old password cannot be blank. [Method: updateUser]");
+            }
+            if (!passwordEncoder.matches(userUpdateDto.getOldPassword(), user.getPassword())) {
+                throw new InvalidCredentialsException("Incorrect old password. [Method: updateUser]");
+            }
+        }
+        if (isPut) {
+            if (userUpdateDto.getName() == null || userUpdateDto.getName().isEmpty()) {
+                throw new IllegalArgumentException("User name cannot be blank. [PUT: Method: updateUser]");
+            }
+            if (userUpdateDto.getNewPassword() == null || userUpdateDto.getNewPassword().isEmpty()) {
+                throw new IllegalArgumentException("User password cannot be blank. [PUT: Method: updateUser]");
+            }
+            user.setUserName(null);
+            user.setPassword(null);
+        }
         user = userAdapter.fromUpdateDto(userUpdateDto, user);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -94,7 +112,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String email) {
         if (email == null) {
-            throw new InvalidCredentialsException("Invalid email address.");
+            throw new InvalidCredentialsException("Invalid email address. [Method: deleteUser]");
         }
         userJpaRepository.deleteByUserEmail(email);
     }
@@ -103,10 +121,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto removeAllRolesFromUser(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null.");
+            throw new IllegalArgumentException("User ID cannot be null. [Method: removeAllRolesFromUser]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: removeAllRolesFromUser]"));
         user.getRoleType().clear();
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -115,26 +133,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto findUserById(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null.");
+            throw new IllegalArgumentException("User ID cannot be null. [Method: findUserById]");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: findUserById]"));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public UserResponseDto findUserByEmail(String email) {
         if (email == null) {
-            throw new IllegalArgumentException("Email cannot be null.");
+            throw new IllegalArgumentException("Email cannot be null. [Method: findUserByEmail]");
         }
-        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found."));
+        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found. [Method: findUserByEmail]"));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public List<UserResponseDto> findUsersByUsername(String username) {
         if (username == null) {
-            throw new IllegalArgumentException("Username cannot be null.");
+            throw new IllegalArgumentException("Username cannot be null. [Method: findUsersByUsername]");
         }
         List<User> users = userJpaRepository.findByUserName(username);
         List<UserResponseDto> userResponseDtos = new ArrayList<>();
@@ -157,10 +175,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public OrganizationResponseDto findOrganizationByUserEmail(String email) {
         if (email == null) {
-            throw new IllegalArgumentException("Email cannot be null.");
+            throw new IllegalArgumentException("Email cannot be null. [Method: findOrganizationByUserId]");
         }
         User user = userJpaRepository.findByUserEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found."));
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found. [Method: findOrganizationByUserId]"));
         Organization organization = user.getOrganization();
         return organizationAdapter.toResponseDto(organization);
     }

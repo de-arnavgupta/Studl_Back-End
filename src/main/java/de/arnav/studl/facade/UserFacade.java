@@ -11,7 +11,7 @@ import java.util.List;
 public interface UserFacade {
 
     void delete(String email);
-    UserResponseDto update(UserUpdateDto userUpdateDto, Long userId);
+    UserResponseDto update(UserUpdateDto userUpdateDto, Long userId, Boolean isPut);
     UserResponseDto removeAllRoles(Long userRoleId);
     UserResponseDto findById(Long userId);
     UserResponseDto findByEmail(String email);

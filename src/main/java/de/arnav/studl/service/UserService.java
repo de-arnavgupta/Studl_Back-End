@@ -11,7 +11,7 @@ public interface UserService {
 
     void deleteUser(String email);
     UserResponseDto createUser(UserCreateDto userCreateDto);
-    UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId);
+    UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId, Boolean IsPut);
     UserResponseDto removeAllRolesFromUser(Long userId);
     UserResponseDto findUserById(Long userId);
     UserResponseDto findUserByEmail(String email);

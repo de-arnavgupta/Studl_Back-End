@@ -19,8 +19,8 @@ public class OrganizationFacadeImpl implements OrganizationFacade {
     }
 
     @Override
-    public OrganizationResponseDto update(OrganizationUpdateDto organizationUpdateDto, Long organizationId) {
-        return organizationService.updateOrganization(organizationUpdateDto, organizationId);
+    public OrganizationResponseDto update(OrganizationUpdateDto organizationUpdateDto, Long organizationId, Boolean isPut) {
+        return organizationService.updateOrganization(organizationUpdateDto, organizationId, isPut);
     }
 
     @Override

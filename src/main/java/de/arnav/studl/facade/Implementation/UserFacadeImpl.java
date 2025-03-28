@@ -26,8 +26,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserResponseDto update(UserUpdateDto userUpdateDto, Long userId) {
-        return userService.updateUser(userUpdateDto, userId);
+    public UserResponseDto update(UserUpdateDto userUpdateDto, Long userId, Boolean isPut) {
+        return userService.updateUser(userUpdateDto, userId, isPut);
     }
 
     @Override

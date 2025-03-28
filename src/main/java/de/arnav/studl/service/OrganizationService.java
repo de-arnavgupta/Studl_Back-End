@@ -9,7 +9,7 @@ import java.util.List;
 public interface OrganizationService {
 
     OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto);
-    OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId);
+    OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId, Boolean isPut);
     void deleteOrganization(Long organizationId);
     Integer countUsersByOrganizationId(Long organizationId);
     OrganizationResponseDto findOrganizationById(Long organizationId);
