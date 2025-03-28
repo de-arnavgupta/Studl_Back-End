@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 public class UserUpdateDto {
 
     private String name;
+    private String email;
     private String oldPassword;
     private String newPassword;
 
@@ -15,6 +16,10 @@ public class UserUpdateDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public String getOldPassword() {

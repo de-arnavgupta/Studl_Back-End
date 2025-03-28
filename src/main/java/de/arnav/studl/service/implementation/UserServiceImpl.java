@@ -84,6 +84,9 @@ public class UserServiceImpl implements UserService {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null. [Method: updateUser]");
         }
+        if (userUpdateDto.getEmail() != null) {
+            throw new IllegalArgumentException("Email cannot be updated.");
+        }
         User user = userJpaRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: updateUser]"));
         if(userUpdateDto.getNewPassword() != null) {
