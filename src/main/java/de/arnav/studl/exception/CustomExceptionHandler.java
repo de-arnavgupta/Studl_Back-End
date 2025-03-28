@@ -56,7 +56,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalArgumentException(IllegalArgumentException ex) {
-        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", "Invalid argument provided.");
+        return buildResponse(HttpStatus.BAD_REQUEST, "Bad Request", (ex.getMessage() != null) ? ex.getMessage() : "Invalid argument provided.");
     }
 
 

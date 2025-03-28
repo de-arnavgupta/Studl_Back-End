@@ -26,13 +26,13 @@ public class OrganizationController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<OrganizationResponseDto> updateUser(@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
+    public ResponseEntity<OrganizationResponseDto> updateOrganization(@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
         OrganizationResponseDto organizationResponseDto = organizationFacade.update(organizationUpdateDto, id, true);
         return ResponseEntity.ok(organizationResponseDto);
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<OrganizationResponseDto> updateUserPartially(@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
+    public ResponseEntity<OrganizationResponseDto> updateOrganizationPartially (@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
         OrganizationResponseDto organizationResponseDto = organizationFacade.update(organizationUpdateDto, id, false);
         return ResponseEntity.ok(organizationResponseDto);
     }
