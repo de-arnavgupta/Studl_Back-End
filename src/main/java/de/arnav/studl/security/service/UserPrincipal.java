@@ -23,7 +23,7 @@ public class UserPrincipal implements UserDetails {
         // Convert the user's role into a GrantedAuthority
         return user.getRoleType().stream()
                 .map(role -> new SimpleGrantedAuthority(((RoleType) role).name().toUpperCase()))
-                .collect(Collectors.toSet()); // Convert to Set    }
+                .collect(Collectors.toSet()); // Convert to Set
     }
     @Override
     public String getPassword() {

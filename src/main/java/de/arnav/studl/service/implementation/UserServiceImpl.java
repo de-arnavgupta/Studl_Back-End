@@ -49,18 +49,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         if (userJpaRepository.existsByUserEmail(userCreateDto.getEmail())) {
-            throw new DuplicateUserException("User with email " + userCreateDto.getEmail() + " already exists. [Method: createUser]");
+            throw new DuplicateUserException("User with email " + userCreateDto.getEmail() + " already exists.");
         }
         User user = userAdapter.fromCreateDto(userCreateDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         Set<RoleType> roles = customLogicService.assignRoles(user.getUserEmail());
         if (roles.isEmpty()) {
-            throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address. [Method: createUser]");
+            throw new InvalidCredentialsException("You're not authorized to create an account. Pls use the appropriate organization email address.");
         }
         user.setRoleType(roles);
         String domain = getDomainFromEmail(user.getUserEmail());
         Organization organization = organizationJpaRepository.findByDomainName(domain)
-                .orElseThrow(() -> new OrganizationNotFoundException("Organization with domain " + domain + " not found. [Method: createUser]"));
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with domain " + domain + " not found."));
         user.setOrganization(organization);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -82,10 +82,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto updateUser(UserUpdateDto userUpdateDto, Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null. [Method: updateUser]");
+            throw new IllegalArgumentException("User ID cannot be null.");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: updateUser]"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
         user = userAdapter.fromUpdateDto(userUpdateDto, user);
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String email) {
         if (email == null) {
-            throw new InvalidCredentialsException("Invalid email address. [Method: deleteUser]");
+            throw new InvalidCredentialsException("Invalid email address.");
         }
         userJpaRepository.deleteByUserEmail(email);
     }
@@ -103,10 +103,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto removeAllRolesFromUser(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null. [Method: removeAllRolesFromUser]");
+            throw new IllegalArgumentException("User ID cannot be null.");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: removeAllRolesFromUser]"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
         user.getRoleType().clear();
         User savedUser = userJpaRepository.save(user);
         return userAdapter.toResponseDto(savedUser);
@@ -115,26 +115,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto findUserById(Long userId) {
         if (userId == null) {
-            throw new IllegalArgumentException("User ID cannot be null. [Method: findUserById]");
+            throw new IllegalArgumentException("User ID cannot be null.");
         }
         User user = userJpaRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found. [Method: findUserById]"));
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + userId + " not found."));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public UserResponseDto findUserByEmail(String email) {
         if (email == null) {
-            throw new IllegalArgumentException("Email cannot be null. [Method: findUserByEmail]");
+            throw new IllegalArgumentException("Email cannot be null.");
         }
-        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found. [Method: findUserByEmail]"));
+        User user = userJpaRepository.findByUserEmail(email).orElseThrow(()-> new UserNotFoundException("User with email " + email + " not found."));
         return userAdapter.toResponseDto(user);
     }
 
     @Override
     public List<UserResponseDto> findUsersByUsername(String username) {
         if (username == null) {
-            throw new IllegalArgumentException("Username cannot be null. [Method: findUsersByUsername]");
+            throw new IllegalArgumentException("Username cannot be null.");
         }
         List<User> users = userJpaRepository.findByUserName(username);
         List<UserResponseDto> userResponseDtos = new ArrayList<>();
@@ -157,10 +157,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public OrganizationResponseDto findOrganizationByUserEmail(String email) {
         if (email == null) {
-            throw new IllegalArgumentException("Email cannot be null. [Method: findOrganizationByUserId]");
+            throw new IllegalArgumentException("Email cannot be null.");
         }
         User user = userJpaRepository.findByUserEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found. [Method: findOrganizationByUserId]"));
+                .orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found."));
         Organization organization = user.getOrganization();
         return organizationAdapter.toResponseDto(organization);
     }

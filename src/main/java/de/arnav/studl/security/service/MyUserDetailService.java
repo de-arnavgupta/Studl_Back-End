@@ -20,7 +20,7 @@ public class MyUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found. [Method: findUserByEmail]"));
+        User user = userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("User with email " + email + " not found."));
         Hibernate.initialize(user.getRoleType());
         return new UserPrincipal(user);
     }

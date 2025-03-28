@@ -64,7 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
             if(email != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                User user= userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("User with this email not found. [Method: findUserByEmail]"));
+                User user= userJpaRepository.findByUserEmail(email).orElseThrow(() -> new UserNotFoundException("User with this email not found."));
                 UserDetails userDetails = myUserDetailService.loadUserByUsername(email);
 
                 if(!jwtService.validateToken(token,user)){

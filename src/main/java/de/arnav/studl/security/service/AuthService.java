@@ -46,7 +46,7 @@ public class AuthService {
 
             return jwtService.generateToken(email);
         } catch(BadCredentialsException e){
-            throw new InvalidCredentialsException("Invalid email or password. [Method: authenticateUser]");
+            throw new InvalidCredentialsException("Invalid email or password.");
         }
     }
 
@@ -91,7 +91,7 @@ public class AuthService {
                 addToken(token);
             }
         } catch (Exception e){
-            throw new LogoutFailedException("Logout failed. [Method: logout]");
+            throw new LogoutFailedException("Logout failed.");
         }
     }
 }
