@@ -19,6 +19,12 @@ public class OrganizationController {
         this.organizationFacade = organizationFacade;
     }
 
+    @GetMapping("/fetch/{id}")
+    public ResponseEntity<OrganizationResponseDto> getOrganization(@PathVariable Long id) {
+        OrganizationResponseDto organizationResponseDto = organizationFacade.findById(id);
+        return ResponseEntity.ok(organizationResponseDto);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<OrganizationResponseDto> registerUser(@Valid @RequestBody OrganizationCreateDto organizatonCreateDto){
         OrganizationResponseDto organizationResponseDto = organizationFacade.organizationRegister(organizatonCreateDto);
@@ -40,7 +46,7 @@ public class OrganizationController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteOrganization(@Valid @PathVariable Long id) {
         organizationFacade.delete(id);
-        return ResponseEntity.ok("✅ Organization and its uers deleted successfully");
+        return ResponseEntity.ok("✅ Organization and its users deleted successfully");
     }
 
 }
