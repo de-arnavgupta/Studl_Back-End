@@ -30,7 +30,7 @@ public class JwtService {
     private final String secretKey;
     private final UserJpaRepository userJpaRepository;
     private final TokenBlacklistJpaRepository tokenBlacklistJpaRepository;
-    private final int expirationTime;
+    private final long expirationTime;
 
     public JwtService(@Value("${jwt.secret}") String secretKey,@Value("${jwt.expiration}") int expirationTime,UserJpaRepository userJpaRespository,TokenBlacklistJpaRepository tokenBlacklistJpaRepository) {
         this.secretKey = secretKey;
