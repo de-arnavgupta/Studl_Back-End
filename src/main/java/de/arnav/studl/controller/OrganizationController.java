@@ -1,63 +1,46 @@
 package de.arnav.studl.controller;
 
-import de.arnav.studl.dto.organization.OrganizationCreateDto;
-import de.arnav.studl.dto.organization.OrganizationResponseDto;
-import de.arnav.studl.dto.organization.OrganizationUpdateDto;
-import de.arnav.studl.facade.template.OrganizationFacade;
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
+import de.arnav.studl.facade.OrganizationFacade;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/organizations")
+@RequestMapping("/organization")
 public class OrganizationController {
 
     private final OrganizationFacade organizationFacade;
+
 
     public OrganizationController(OrganizationFacade organizationFacade) {
         this.organizationFacade = organizationFacade;
     }
 
-    @PostMapping
-    public ResponseEntity<OrganizationResponseDto> createOrganization(@RequestBody OrganizationCreateDto dto) {
-        OrganizationResponseDto response = organizationFacade.createOrganization(dto);
-        return ResponseEntity.ok(response);
+    @PostMapping("/register")
+    public ResponseEntity<OrganizationResponseDto> registerUser(@Valid @RequestBody OrganizationCreateDto organizatonCreateDto){
+        OrganizationResponseDto organizationResponseDto = organizationFacade.organizationRegister(organizatonCreateDto);
+        return ResponseEntity.ok(organizationResponseDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrganizationResponseDto> getOrganizationById(@PathVariable Long id) {
-        OrganizationResponseDto response = organizationFacade.getOrganizationById(id);
-        return ResponseEntity.ok(response);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<OrganizationResponseDto> updateUser(@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
+        OrganizationResponseDto organizationResponseDto = organizationFacade.update(organizationUpdateDto, id, true);
+        return ResponseEntity.ok(organizationResponseDto);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<OrganizationResponseDto> updateOrganization(@PathVariable Long id, @RequestBody OrganizationUpdateDto dto) {
-        OrganizationResponseDto response = organizationFacade.updateOrganization(id, dto);
-        return ResponseEntity.ok(response);
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<OrganizationResponseDto> updateUserPartially(@Valid @RequestBody OrganizationUpdateDto organizationUpdateDto, @PathVariable Long id){
+        OrganizationResponseDto organizationResponseDto = organizationFacade.update(organizationUpdateDto, id, false);
+        return ResponseEntity.ok(organizationResponseDto);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteOrganization(@PathVariable Long id) {
-        organizationFacade.deleteOrganization(id);
-        return ResponseEntity.noContent().build();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteOrganization(@Valid @PathVariable Long id) {
+        organizationFacade.delete(id);
+        return ResponseEntity.ok("✅ Organization and its uers deleted successfully");
     }
 
-    @GetMapping
-    public ResponseEntity<List<OrganizationResponseDto>> getAllOrganizations() {
-        List<OrganizationResponseDto> responses = organizationFacade.getAllOrganizations();
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<OrganizationResponseDto>> searchOrganizationsByName(@RequestParam("keyword") String keyword) {
-        List<OrganizationResponseDto> responses = organizationFacade.searchOrganizationsByName(keyword);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/domain")
-    public ResponseEntity<OrganizationResponseDto> getOrganizationByDomain(@RequestParam("value") String domain) {
-        OrganizationResponseDto response = organizationFacade.getOrganizationByDomain(domain);
-        return ResponseEntity.ok(response);
-    }
 }

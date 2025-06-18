@@ -1,90 +1,131 @@
 package de.arnav.studl.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    private String name;
-
-    @Column(unique = true)
-    private String email;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private String hashedPassword;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserRole> userRoles;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<RoleType> roleType;
+    private String userName;
+    private String userEmail;
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
     private Organization organization;
+    private String organisationRollNo;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private String provider;
+    private String providerId;
+    private String password;
 
-    @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Task> tasks;
-
+    //Default
     public User() {}
 
+    public User(Long userId, Set<RoleType> roleType, String userName, String userEmail, Organization organization, String organisationRollNo, Timestamp createdAt, Timestamp updatedAt, String provider, String providerId, String password) {
+
+        this.userId = userId;
+        this.roleType = roleType;
+        this.userName = userName;
+        this.userEmail = userEmail;
+        this.organization = organization;
+        this.organisationRollNo = organisationRollNo;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.password = password;
+    }
+
+    //Getters and Setters
     public Long getUserId() {
         return userId;
     }
-    public void setUserId(Long userId) {
-        this.userId = userId;
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-    public String getName() {
-        return name;
+
+    public String getPassword() {
+        return password;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setPassword(String password) {
+        this.password = password;
     }
-    public String getEmail() {
-        return email;
+
+    public Set<RoleType> getRoleType() {
+        return roleType;
     }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRoleType(Set<RoleType> roleType) {
+        this.roleType = roleType;
     }
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+
+    public String getUserName() {
+        return userName;
     }
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
+
+
+    public String getUserEmail() {
+        return userEmail;
     }
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
-    public List<UserRole> getUserRoles() {
-        return userRoles;
-    }
-    public void setUserRoles(List<UserRole> userRoles) {
-        this.userRoles = userRoles;
-    }
+
     public Organization getOrganization() {
         return organization;
     }
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
-    public List<Task> getTasks() {
-        return tasks;
+
+    public String getOrganisationRollNo() {
+        return organisationRollNo;
     }
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
+    public void setOrganisationRollNo(String organisationRollNo) {
+        this.organisationRollNo = organisationRollNo;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
     }
 }

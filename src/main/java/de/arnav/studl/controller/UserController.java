@@ -1,16 +1,17 @@
 package de.arnav.studl.controller;
 
-import de.arnav.studl.dto.user.UserCreateDto;
-import de.arnav.studl.dto.user.UserResponseDto;
-import de.arnav.studl.dto.user.UserUpdateDto;
-import de.arnav.studl.facade.template.UserFacade;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.userDto.UserResponseDto;
+import de.arnav.studl.dto.userDto.UserUpdateDto;
+import de.arnav.studl.facade.UserFacade;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserFacade userFacade;
@@ -19,51 +20,45 @@ public class UserController {
         this.userFacade = userFacade;
     }
 
-    @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto dto) {
-        UserResponseDto response = userFacade.createUser(dto);
-        return ResponseEntity.ok(response);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@Valid @RequestBody UserUpdateDto userUpdateDto, @PathVariable Long id){
+        UserResponseDto userResponseDto = userFacade.update(userUpdateDto, id, true);
+        return ResponseEntity.ok(userResponseDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
-        UserResponseDto response = userFacade.getUserById(id);
-        return ResponseEntity.ok(response);
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<UserResponseDto> updateUserPartially(@Valid @RequestBody UserUpdateDto userUpdateDto, @PathVariable Long id){
+        UserResponseDto userResponseDto = userFacade.update(userUpdateDto, id, false);
+        return ResponseEntity.ok(userResponseDto);
     }
 
-    @GetMapping("/email")
-    public ResponseEntity<UserResponseDto> getUserByEmail(@RequestParam("value") String email) {
-        UserResponseDto response = userFacade.getUserByEmail(email);
-        return ResponseEntity.ok(response);
+    @DeleteMapping("/delete/{email}")
+    public ResponseEntity<String> deleteUser(@Valid @PathVariable String email) {
+        userFacade.delete(email);
+        return ResponseEntity.ok("✅ User deleted successfully");
     }
 
-    @GetMapping
+    @GetMapping("/fetchBy/{email}")
+    public ResponseEntity<UserResponseDto> getUserByEmail(@Valid @PathVariable String email) {
+        UserResponseDto user = userFacade.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/fetchOrganizationBy/{email}")
+    public ResponseEntity<OrganizationResponseDto> getOrganizationByUserEmail(@Valid @PathVariable String email) {
+        OrganizationResponseDto organization = userFacade.findOrganizationByEmail(email);
+        return ResponseEntity.ok(organization);
+    }
+
+    @GetMapping("/fetchAll")
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
-        List<UserResponseDto> responses = userFacade.getAllUsers();
-        return ResponseEntity.ok(responses);
+        List<UserResponseDto> users = userFacade.findAll();
+        return ResponseEntity.ok(users);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto dto) {
-        UserResponseDto response = userFacade.updateUser(id, dto);
-        return ResponseEntity.ok(response);
+    @GetMapping("/")
+    public String getUserByEmail() {
+        return "Hello World";
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userFacade.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/organization/{organizationId}")
-    public ResponseEntity<List<UserResponseDto>> getUsersByOrganization(@PathVariable Long organizationId) {
-        List<UserResponseDto> responses = userFacade.getUsersByOrganization(organizationId);
-        return ResponseEntity.ok(responses);
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<UserResponseDto>> findUsersByName(@RequestParam("keyword") String keyword) {
-        List<UserResponseDto> responses = userFacade.findUsersByName(keyword);
-        return ResponseEntity.ok(responses);
-    }
 }

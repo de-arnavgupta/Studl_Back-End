@@ -1,80 +1,134 @@
 package de.arnav.studl.service.implementation;
 
-import de.arnav.studl.adapter.organization.OrganizationAdapter;
-import de.arnav.studl.dto.organization.OrganizationCreateDto;
-import de.arnav.studl.dto.organization.OrganizationResponseDto;
-import de.arnav.studl.dto.organization.OrganizationUpdateDto;
-import de.arnav.studl.exception.customExceptions.ResourceNotFoundException;
+import de.arnav.studl.adapter.OrganizationAdapter;
+import de.arnav.studl.dto.organizationDto.OrganizationCreateDto;
+import de.arnav.studl.dto.organizationDto.OrganizationResponseDto;
+import de.arnav.studl.dto.organizationDto.OrganizationUpdateDto;
+import de.arnav.studl.exception.DuplicateOrganizationException;
+import de.arnav.studl.exception.OrganizationNotFoundException;
 import de.arnav.studl.model.Organization;
-import de.arnav.studl.repository.OrganizationRepository;
-import de.arnav.studl.service.template.OrganizationService;
+import de.arnav.studl.repository.OrganizationJpaRepository;
+import de.arnav.studl.repository.UserJpaRepository;
+import de.arnav.studl.service.OrganizationService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class OrganizationServiceImpl implements OrganizationService {
 
-    private final OrganizationRepository organizationRepository;
     private final OrganizationAdapter organizationAdapter;
+    private final OrganizationJpaRepository organizationJpaRepository;
+    private final UserJpaRepository userJpaRepository;
 
-    public OrganizationServiceImpl(OrganizationRepository organizationRepository,
-                                   OrganizationAdapter organizationAdapter) {
-        this.organizationRepository = organizationRepository;
+    public OrganizationServiceImpl(OrganizationAdapter organizationAdapter, OrganizationJpaRepository organizationJpaRepository, UserJpaRepository userJpaRepository) {
         this.organizationAdapter = organizationAdapter;
+        this.organizationJpaRepository = organizationJpaRepository;
+        this.userJpaRepository = userJpaRepository;
     }
 
+    @Transactional
     @Override
-    public OrganizationResponseDto createOrganization(OrganizationCreateDto dto) {
-        Organization organization = organizationAdapter.fromCreateDto(dto);
-        Organization savedOrg = organizationRepository.save(organization);
-        return organizationAdapter.toResponseDto(savedOrg);
-    }
-
-    @Override
-    public OrganizationResponseDto getOrganizationById(Long id) {
-        Organization org = organizationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + id));
-        return organizationAdapter.toResponseDto(org);
-    }
-
-    @Override
-    public OrganizationResponseDto updateOrganization(Long id, OrganizationUpdateDto dto) {
-        Organization org = organizationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Organization not found with id " + id));
-        org = organizationAdapter.updateEntityFromUpdateDto(dto, org);
-        Organization updatedOrg = organizationRepository.save(org);
-        return organizationAdapter.toResponseDto(updatedOrg);
-    }
-
-    @Override
-    public void deleteOrganization(Long id) {
-        if(!organizationRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Organization not found with id " + id);
+    public OrganizationResponseDto createOrganization(OrganizationCreateDto organizationCreateDto) {
+        if (organizationJpaRepository.existsByDomainName(organizationCreateDto.getDomain())) {
+            throw new DuplicateOrganizationException("Organization with domain " + organizationCreateDto.getDomain() + " already exists. (createOrganization)");
         }
-        organizationRepository.deleteById(id);
+        Organization organization = organizationAdapter.fromCreateDto(organizationCreateDto);
+        Organization savedOrganization = organizationJpaRepository.save(organization);
+        return organizationAdapter.toResponseDto(savedOrganization);
+    }
+
+    // IF USING PUT OPERATION, PLS ENSURE ALL CREDENTIALS ARE MET, ELSE WE WILL FACE NULL VALUES AND EXCEPTIONS ACCORDINGLY.
+    @Transactional
+    @Override
+    public OrganizationResponseDto updateOrganization(OrganizationUpdateDto organizationUpdateDto, Long organizationId, Boolean isPut) {
+
+        if (organizationId == null) {
+            throw new IllegalArgumentException("Organization ID cannot be null. (updateOrganization)");
+        }
+        if (organizationUpdateDto.getDomain() != null) {
+            throw new IllegalArgumentException("Organization domain cannot be updated. (PUT: updateOrganization)");
+        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (updateOrganization)"));
+        if (isPut) {
+            if (organizationUpdateDto.getName() == null || organizationUpdateDto.getName().isEmpty()) {
+                throw new IllegalArgumentException("Organization name cannot be blank. (PUT: updateOrganization)");
+            }
+            if (organizationUpdateDto.getTopLevelDomains() == null || organizationUpdateDto.getTopLevelDomains().isEmpty()) {
+                throw new IllegalArgumentException("Organization top level domains cannot be null. (PUT: updateOrganization)");
+            }
+            organization.setOrganizationName(null);
+            organization.setSubDomainNames(null);
+            organization.setTld(null);
+        }
+        organization = organizationAdapter.fromUpdateDto(organizationUpdateDto, organization);
+        Organization savedOrganization = organizationJpaRepository.save(organization);
+        return organizationAdapter.toResponseDto(savedOrganization);
+    }
+
+    @Transactional
+    @Override
+    public void deleteOrganization(Long organizationId) {
+        if (organizationId == null) {
+            throw new IllegalArgumentException("Organization ID cannot be null. (deleteOrganization)");
+        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (deleteOrganization)"));
+        userJpaRepository.deleteAllByOrganization(organization);
+        organizationJpaRepository.deleteById(organizationId);
     }
 
     @Override
-    public List<OrganizationResponseDto> getAllOrganizations() {
-        return organizationRepository.findAll().stream()
-                .map(organizationAdapter::toResponseDto)
-                .collect(Collectors.toList());
+    public Integer countUsersByOrganizationId(Long organizationId) {
+        if (organizationId == null) {
+            throw new IllegalArgumentException("Organization ID cannot be null. (countUsersByOrganizationId)");
+        }
+        if (!organizationJpaRepository.existsById(organizationId)) {
+            throw new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)");
+        }
+        return organizationJpaRepository.countUsersByOrganizationId(organizationId);
     }
 
     @Override
-    public List<OrganizationResponseDto> searchOrganizationsByName(String keyword) {
-        return organizationRepository.findByNameContaining(keyword).stream()
-                .map(organizationAdapter::toResponseDto)
-                .collect(Collectors.toList());
+    public OrganizationResponseDto findOrganizationById(Long organizationId) {
+        if (organizationId == null) {
+            throw new IllegalArgumentException("Organization ID cannot be null. (findOrganizationById)");
+        }
+        Organization organization = organizationJpaRepository.findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException("Organization with ID " + organizationId + " not found. (countUsersByOrganizationId)"));
+        return organizationAdapter.toResponseDto(organization);
     }
 
     @Override
-    public OrganizationResponseDto getOrganizationByDomain(String domain) {
-        Organization org = organizationRepository.findByDomain(domain)
-                .orElseThrow(() -> new RuntimeException("Organization not found"));
-        return organizationAdapter.toResponseDto(org);
+    public List<OrganizationResponseDto> findAllOrganizations() {
+        List<Organization> organizations = organizationJpaRepository.findAll();
+        List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();
+        for(Organization organization : organizations) {
+            organizationResponseDtos.add(organizationAdapter.toResponseDto(organization));
+        }
+        return organizationResponseDtos;
+    }
+
+    @Override
+    public List<OrganizationResponseDto> findOrganizationsByName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("Organization name cannot be null. (findOrganizationsByName)");
+        }
+        List<Organization> organizations = organizationJpaRepository.findByOrganizationName(name);
+        List<OrganizationResponseDto> organizationResponseDtos = new ArrayList<>();
+        for(Organization organization : organizations) {
+            organizationResponseDtos.add(organizationAdapter.toResponseDto(organization));
+        }
+        return organizationResponseDtos;
     }
 }
+
+/*
+ * Questions to ask yourself next time b4 jumping to code (thought process):
+ * What are my DTOs and how will they flow between the layers?
+ * What do my adapters do?
+ * Which facade will use which methods.
+ * */

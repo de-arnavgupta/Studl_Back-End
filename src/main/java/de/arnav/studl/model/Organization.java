@@ -1,46 +1,88 @@
 package de.arnav.studl.model;
 
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "organizations")
 public class Organization {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long organizationId;
-
-    private String name;
-    private String domain;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "organization_codomains", joinColumns = @JoinColumn(name = "organization_id"))
-    @Column(name = "codomain")
-    private List<String> codomains = new ArrayList<>();
+    private String organizationName;
+    private String domainName;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "organization_top_level_domains", joinColumns = @JoinColumn(name = "organization_id"))
-    @Column(name = "top_level_domain")
-    private List<String> topLevelDomains = new ArrayList<>();
+    @CollectionTable(name = "organization_tld", joinColumns = @JoinColumn(name = "organization_id"))
+    private Set<String> tld = new HashSet<>(); // Do not remove initialization. Check how Eager works.
 
-    @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL)
-    private List<User> users;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "organization_sub_domains", joinColumns = @JoinColumn(name = "organization_id"))
+    private Set<String> subDomainNames = new HashSet<>(); // Do not remove initialization. Check how Eager works.
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
 
-    public Organization() {}
+    public Organization() {
+    }
 
-    public Long getOrganizationId() { return organizationId; }
-    public void setOrganizationId(Long organizationId) { this.organizationId = organizationId; }
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-    public String getDomain() { return domain; }
-    public void setDomain(String domain) { this.domain = domain; }
-    public List<String> getCodomains() { return codomains; }
-    public void setCodomains(List<String> codomains) { this.codomains = codomains; }
-    public List<String> getTopLevelDomains() { return topLevelDomains; }
-    public void setTopLevelDomains(List<String> topLevelDomains) { this.topLevelDomains = topLevelDomains; }
-    public List<User> getUsers() { return users; }
-    public void setUsers(List<User> users) { this.users = users; }
+    public Organization(String organizationName, String domainName, Set<String> tld, Set<String> subDomainNames, Timestamp createdAt, Timestamp updatedAt) {
+        this.organizationName = organizationName;
+        this.tld = tld;
+        this.domainName = domainName;
+        this.subDomainNames = subDomainNames;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public String getOrganizationName() {
+        return organizationName;
+    }
+    public void setOrganizationName(String organizationName) {
+        this.organizationName = organizationName;
+    }
+
+    public String getDomainName() {
+        return domainName;
+    }
+    public void setDomainName(String domainName) {
+        this.domainName = domainName;
+    }
+
+    public Set<String> getTld() {
+        return tld;
+    }
+    public void setTld(Set<String> tld) {
+        this.tld = tld;
+    }
+
+    public Set<String> getSubDomainNames() {
+        return subDomainNames;
+    }
+    public void setSubDomainNames(Set<String> subDomainNames) {
+        this.subDomainNames = subDomainNames;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        this.createdAt = now;
+        this.updatedAt = now;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Timestamp(System.currentTimeMillis());
+    }
 }
